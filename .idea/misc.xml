@@ -3,7 +3,15 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="../../../../../layout/custom_preview.xml" value="0.12552083333333333" />
+        <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.22135416666666666" />
         <entry key="app/src/main/res/drawable/ic_launcher.xml" value="0.22135416666666666" />
+        <entry key="app/src/main/res/drawable/pinterest_login.xml" value="0.22" />
+        <entry key="app/src/main/res/layout/activity_splash.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/custom_login_button.xml" value="0.20520833333333333" />
+        <entry key="app/src/main/res/layout/login_btn.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/login_button.xml" value="0.5" />
+        <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.22135416666666666" />
       </map>
     </option>
   </component>
