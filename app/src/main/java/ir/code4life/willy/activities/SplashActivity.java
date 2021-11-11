@@ -80,6 +80,8 @@ public class SplashActivity extends AppCompatActivity implements View.OnClickLis
                 Toast.makeText(getApplicationContext(), "Logged in successfully", Toast.LENGTH_SHORT).show();
                 login_btn.setVisibility(View.INVISIBLE);
                 updateStatus("Logged in");
+                Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+                startActivity(intent);
             }
 
             @Override

@@ -2,9 +2,9 @@ plugins {
     id 'com.android.application'
 }
 
-def buildPropertiesFile = rootProject.file('build.properties')
-def buildProperties = new Properties()
-buildProperties.load(new FileInputStream(buildPropertiesFile))
+def keystoreFile = rootProject.file('keystore.properties')
+def keystore = new Properties()
+keystore.load(new FileInputStream(keystoreFile))
 
 android {
     compileSdk 31
@@ -17,10 +17,10 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        buildConfigField("String", "APP_SECRET",buildProperties["APP_SECRET"])
-        buildConfigField("String", "APP_ID",buildProperties["APP_ID"])
-        buildConfigField("String", "HASH_SECRET",buildProperties["HASH_SECRET"])
-        manifestPlaceholders = [APP_ID:buildProperties["APP_ID"]]
+        buildConfigField("String", "APP_SECRET",keystore["APP_SECRET"])
+        buildConfigField("String", "APP_ID",keystore["APP_ID"])
+        buildConfigField("String", "HASH_SECRET",keystore["HASH_SECRET"])
+        manifestPlaceholders = [APP_ID:keystore["APP_ID"]]
     }
 
     buildTypes {
