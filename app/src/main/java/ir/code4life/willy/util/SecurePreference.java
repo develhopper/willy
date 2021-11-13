@@ -39,6 +39,7 @@ public class SecurePreference {
 
     public void apply(){
         editor.apply();
+        editor = null;
     }
 
     private String encrypt(String value){

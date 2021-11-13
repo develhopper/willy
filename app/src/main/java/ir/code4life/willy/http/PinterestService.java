@@ -4,14 +4,17 @@ import com.google.gson.JsonObject;
 
 import java.util.Map;
 
+import ir.code4life.willy.http.models.Board;
+import ir.code4life.willy.http.models.DataResponse;
+import ir.code4life.willy.http.models.Pin;
 import retrofit2.Call;
+import retrofit2.Response;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
-import retrofit2.http.Headers;
 import retrofit2.http.POST;
-import retrofit2.http.Query;
+import retrofit2.http.Path;
 
 public interface PinterestService {
 
@@ -21,4 +24,14 @@ public interface PinterestService {
 
     @GET("v5/user_account")
     Call<JsonObject> user_account(@Header("Authorization") String authorization);
+
+    @GET("v5/boards")
+    Call<DataResponse<Board>> boards(@Header("Authorization") String authorization);
+
+    @GET("v5/boards/{Id}/pins?page_size=3")
+    Call<DataResponse<Pin>> previewPins(@Header("Authorization") String authorization, @Path("Id") String id);
+
+    @GET("v5/board/{Id}/pins")
+    Call<DataResponse<Pin>> pins(@Header("Authorization") String authorization, @Path("Id") String id);
+
 }

@@ -2,13 +2,19 @@ package ir.code4life.willy.http;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.gson.JsonObject;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import ir.code4life.willy.BuildConfig;
+import ir.code4life.willy.http.models.Board;
+import ir.code4life.willy.http.models.DataResponse;
+import ir.code4life.willy.http.models.Media;
+import ir.code4life.willy.http.models.Pin;
 import ir.code4life.willy.util.G;
 import ir.code4life.willy.util.SecurePreference;
 import okhttp3.Credentials;
@@ -76,6 +82,7 @@ public class ServiceHelper {
                     JsonObject json = response.body();
                     securePreference.putString("avatar",json.get("profile_image").getAsString(),false);
                     securePreference.putString("username",json.get("username").getAsString(),false);
+                    securePreference.apply();
                     listener.success(null);
                 }
             }
@@ -86,8 +93,54 @@ public class ServiceHelper {
             }
         });
     }
+
+    public void getBoards(DataListener<Board> listener){
+        String token = "Bearer "+securePreference.getString("token",true);
+        Call<DataResponse<Board>> call = service.boards(token);
+
+        call.enqueue(new Callback<DataResponse<Board>>() {
+            @Override
+            public void onResponse(Call<DataResponse<Board>> call, Response<DataResponse<Board>> response) {
+                DataResponse<Board> boards = response.body();
+                if (boards != null) {
+                    listener.success(boards.items);
+                }
+                else{
+                    Toast.makeText(context, "No boards", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<DataResponse<Board>> call, Throwable t) {
+
+            }
+        });
+    }
+
+    public void getBoardPreviews(Long id, DataListener<Pin> listener){
+        String token = "Bearer "+securePreference.getString("token",true);
+        Call<DataResponse<Pin>> call = service.previewPins(token,id.toString());
+
+        call.enqueue(new Callback<DataResponse<Pin>>() {
+            @Override
+            public void onResponse(Call<DataResponse<Pin>> call, Response<DataResponse<Pin>> response) {
+                listener.success(response.body().items);
+            }
+
+            @Override
+            public void onFailure(Call<DataResponse<Pin>> call, Throwable t) {
+
+            }
+        });
+    }
+
     public interface ServiceListener{
         void success(Map<String,String> data);
+        void fail();
+    }
+
+    public interface DataListener<T>{
+        void success(List<T> list);
         void fail();
     }
 }
