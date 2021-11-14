@@ -1,16 +1,22 @@
 package ir.code4life.willy.activities.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.List;
+import java.util.Objects;
 
 import ir.code4life.willy.R;
 import ir.code4life.willy.adapters.BoardRecyclerAdapter;
@@ -22,6 +28,7 @@ import ir.code4life.willy.http.ServiceHelper;
 import ir.code4life.willy.http.models.Board;
 import ir.code4life.willy.http.models.Media;
 import ir.code4life.willy.http.models.Pin;
+import ir.code4life.willy.services.SyncService;
 import ir.code4life.willy.util.G;
 
 public class BoardsFragment extends Fragment {
@@ -49,18 +56,17 @@ public class BoardsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_boards, container, false);
-        
+        setHasOptionsMenu(true);
         helper = new ServiceHelper(getContext());
+
         database = AppDatabase.getInstance(getContext());
         boardDao = database.boardDao();
-        pinDao = database.pinDao();
-        mediaDao = database.mediaDao();
-        
+
         recyclerView = view.findViewById(R.id.boards_recycler);
         
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(),2));
         
-        adapter = new BoardRecyclerAdapter(getContext());
+        adapter = new BoardRecyclerAdapter(getActivity());
         
         recyclerView.setAdapter(adapter);
         
@@ -68,40 +74,29 @@ public class BoardsFragment extends Fragment {
         return view;
     }
 
-    private void refreshList() {
+    public void refreshList() {
         List<Board> boards = boardDao.getAll();
         if(boards.isEmpty()){
-            sync();
+            Intent intent = new Intent();
+            intent.setAction(SyncService.SYNC_ALL);
+            requireContext().sendBroadcast(intent);
         }
         adapter.updateList(boards);
     }
 
-    private void sync(){
-        helper.getBoards(new ServiceHelper.DataListener<Board>() {
-            @Override
-            public void success(List<Board> boardList) {
-                boardDao.insertAll(boardList);
-                for (Board board:boardList) {
-                    helper.getBoardPreviews(board.id, new ServiceHelper.DataListener<Pin>() {
-                        @Override
-                        public void success(List<Pin> list) {
-                            pinDao.insertAll(list);
-                            mediaDao.insertAll(G.getPinMedia(list.toArray(new Pin[0])));
-                            adapter.updateList(boardList);
-                        }
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.board_menu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
 
-                        @Override
-                        public void fail() {
-
-                        }
-                    });
-                }
-            }
-
-            @Override
-            public void fail() {
-
-            }
-        });
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if(item.getItemId() == R.id.nav_refresh){
+                Intent intent = new Intent();
+                intent.setAction(SyncService.SYNC_ALL);
+                requireContext().sendBroadcast(intent);
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

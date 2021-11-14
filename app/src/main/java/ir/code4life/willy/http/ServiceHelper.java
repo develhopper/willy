@@ -94,9 +94,9 @@ public class ServiceHelper {
         });
     }
 
-    public void getBoards(DataListener<Board> listener){
+    public void getBoards(String bookmark, DataListener<Board> listener){
         String token = "Bearer "+securePreference.getString("token",true);
-        Call<DataResponse<Board>> call = service.boards(token);
+        Call<DataResponse<Board>> call = service.boards(token,bookmark);
 
         call.enqueue(new Callback<DataResponse<Board>>() {
             @Override
@@ -141,6 +141,5 @@ public class ServiceHelper {
 
     public interface DataListener<T>{
         void success(List<T> list);
-        void fail();
     }
 }

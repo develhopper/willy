@@ -12,12 +12,12 @@ import ir.code4life.willy.R;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link SettingsFragment#newInstance} factory method to
+ * Use the {@link DownloadsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SettingsFragment extends Fragment {
+public class DownloadsFragment extends Fragment {
 
-    public SettingsFragment() {
+    public DownloadsFragment() {
         // Required empty public constructor
     }
 
@@ -27,8 +27,8 @@ public class SettingsFragment extends Fragment {
      *
      * @return A new instance of fragment SettingsFragment.
      */
-    public static SettingsFragment newInstance() {
-        return new SettingsFragment();
+    public static DownloadsFragment newInstance() {
+        return new DownloadsFragment();
     }
 
     @Override
@@ -40,6 +40,6 @@ public class SettingsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_settings, container, false);
+        return inflater.inflate(R.layout.fragment_downloads, container, false);
     }
 }

@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -14,11 +15,11 @@ import com.google.android.material.navigation.NavigationBarView;
 import ir.code4life.willy.R;
 import ir.code4life.willy.activities.fragments.BoardsFragment;
 import ir.code4life.willy.activities.fragments.ProfileFragment;
-import ir.code4life.willy.activities.fragments.SettingsFragment;
+import ir.code4life.willy.activities.fragments.DownloadsFragment;
+import ir.code4life.willy.services.SyncService;
 
 public class MainActivity extends AppCompatActivity {
 
-    private BottomNavigationView navigationView;
     private Fragment selectedFragment;
 
     @Override
@@ -26,6 +27,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initViews();
+        initService();
+    }
+
+    private void initService() {
+        Intent intent = new Intent(this, SyncService.class);
+        startService(intent);
     }
 
     private void initViews() {
@@ -34,7 +41,9 @@ public class MainActivity extends AppCompatActivity {
         transaction.replace(R.id.main_fragment, selectedFragment);
         transaction.commit();
 
-        navigationView = findViewById(R.id.navigation);
+        setSupportActionBar(findViewById(R.id.toolbar));
+
+        BottomNavigationView navigationView = findViewById(R.id.navigation);
         navigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -42,12 +51,12 @@ public class MainActivity extends AppCompatActivity {
                     selectedFragment = BoardsFragment.newInstance();
                 if(item.getItemId() == R.id.nav_profile)
                     selectedFragment = new ProfileFragment();
-                if(item.getItemId() == R.id.nav_settings)
-                    selectedFragment = SettingsFragment.newInstance();
+                if(item.getItemId() == R.id.downloads)
+                    selectedFragment = DownloadsFragment.newInstance();
 
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.main_fragment,selectedFragment);
                 transaction.addToBackStack(null);
+                transaction.replace(R.id.main_fragment,selectedFragment);
                 transaction.commit();
 
                 return true;

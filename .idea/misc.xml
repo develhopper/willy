@@ -5,21 +5,30 @@
       <map>
         <entry key="../../../../../layout/custom_preview.xml" value="0.12552083333333333" />
         <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.22135416666666666" />
+        <entry key="app/src/main/res/drawable/download.xml" value="0.22135416666666666" />
         <entry key="app/src/main/res/drawable/ic_launcher.xml" value="0.22135416666666666" />
         <entry key="app/src/main/res/drawable/navigation_selector.xml" value="0.17777777777777778" />
         <entry key="app/src/main/res/drawable/pinterest_login.xml" value="0.22" />
         <entry key="app/src/main/res/drawable/profile.xml" value="0.1675925925925926" />
+        <entry key="app/src/main/res/drawable/refresh.xml" value="0.10208333333333333" />
         <entry key="app/src/main/res/drawable/settings.xml" value="0.16296296296296298" />
+        <entry key="app/src/main/res/font-v26/fontfamily.xml" value="0.23541666666666666" />
+        <entry key="app/src/main/res/font/fontfamily.xml" value="0.33" />
+        <entry key="app/src/main/res/font/freehand.xml" value="0.23541666666666666" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.22" />
-        <entry key="app/src/main/res/layout/activity_splash.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/activity_splash.xml" value="0.22" />
         <entry key="app/src/main/res/layout/board_item.xml" value="0.25" />
         <entry key="app/src/main/res/layout/custom_login_button.xml" value="0.20520833333333333" />
         <entry key="app/src/main/res/layout/fragment_boards.xml" value="0.20520833333333333" />
+        <entry key="app/src/main/res/layout/fragment_pins.xml" value="0.20520833333333333" />
         <entry key="app/src/main/res/layout/fragment_profile.xml" value="0.20520833333333333" />
         <entry key="app/src/main/res/layout/fragment_settings.xml" value="0.20520833333333333" />
         <entry key="app/src/main/res/layout/login_btn.xml" value="0.33" />
         <entry key="app/src/main/res/layout/login_button.xml" value="0.5" />
+        <entry key="app/src/main/res/layout/pin_item.xml" value="0.20520833333333333" />
         <entry key="app/src/main/res/menu/bottom_navigation_menu.xml" value="0.25" />
+        <entry key="app/src/main/res/menu/pin_menu.xml" value="0.2" />
+        <entry key="app/src/main/res/menu/top_navigation_menu.xml" value="0.20520833333333333" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.22135416666666666" />
       </map>
     </option>

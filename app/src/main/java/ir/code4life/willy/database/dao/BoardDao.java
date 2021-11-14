@@ -21,4 +21,9 @@ public interface BoardDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insertAll(List<Board> boards);
 
+    @Query("UPDATE board SET sync_id=:sync_id where id=:board_id")
+    void update_sync_id(Long board_id, Long sync_id);
+
+    @Query("DELETE FROM board WHERE id NOT IN (:ids)")
+    void sync_deleted_boards(List<Long> ids);
 }

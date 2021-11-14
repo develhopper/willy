@@ -14,6 +14,6 @@ public interface MediaDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insertAll(List<Media> list);
 
-    @Query("SELECT * from Media where size=:size and board_id=:board_id  ORDER by id desc LIMIT 3")
+    @Query("SELECT * from Media where size=:size and board_id=:board_id  ORDER by mediaId desc LIMIT 3")
     List<Media> getPreviews(Integer size,Long board_id);
 }
