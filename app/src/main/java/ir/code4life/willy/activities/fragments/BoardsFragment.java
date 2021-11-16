@@ -1,6 +1,9 @@
 package ir.code4life.willy.activities.fragments;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -8,6 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -24,6 +28,7 @@ import ir.code4life.willy.database.AppDatabase;
 import ir.code4life.willy.database.dao.BoardDao;
 import ir.code4life.willy.database.dao.MediaDao;
 import ir.code4life.willy.database.dao.PinDao;
+import ir.code4life.willy.database.models.BoardWithCount;
 import ir.code4life.willy.http.ServiceHelper;
 import ir.code4life.willy.http.models.Board;
 import ir.code4life.willy.http.models.Media;
@@ -71,11 +76,22 @@ public class BoardsFragment extends Fragment {
         recyclerView.setAdapter(adapter);
         
         refreshList();
+        BroadcastReceiver receiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if(intent.getAction().equals(SyncService.SYNCED)){
+                    Log.d("DEBUG", "synced");
+                    refreshList();
+                }
+            }
+        };
+        IntentFilter filter = new IntentFilter(SyncService.SYNCED);
+        requireContext().registerReceiver(receiver,filter);
         return view;
     }
 
     public void refreshList() {
-        List<Board> boards = boardDao.getAll();
+        List<BoardWithCount> boards = boardDao.getAllWithCount();
         if(boards.isEmpty()){
             Intent intent = new Intent();
             intent.setAction(SyncService.SYNC_ALL);

@@ -7,16 +7,17 @@ import androidx.room.Query;
 
 import java.util.List;
 
+import ir.code4life.willy.database.models.BoardWithCount;
 import ir.code4life.willy.http.models.Board;
 
 @Dao
 public interface BoardDao {
 
-    @Query("SELECT * FROM board LIMIT :limit OFFSET :offset")
-    List<Board> getAll(Integer limit,Integer offset);
-
     @Query("SELECT * FROM board")
     List<Board> getAll();
+
+    @Query("SELECT Board.*,count(pinId) AS count FROM Board JOIN Pin ON Board.id=Pin.board_id GROUP BY Board.id")
+    List<BoardWithCount> getAllWithCount();
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insertAll(List<Board> boards);

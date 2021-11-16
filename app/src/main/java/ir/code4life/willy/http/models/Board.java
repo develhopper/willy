@@ -16,6 +16,8 @@ public class Board {
 
 
     public Long getSync_id() {
+        if(sync_id!=null)
+            return this.sync_id;
         AppDatabase database = AppDatabase.getInstance(null);
         this.sync_id = database.syncDoa().getSyncId(this.id);
         return (sync_id==null)?0L:sync_id;
@@ -36,7 +38,7 @@ public class Board {
         sync_id+=1;
         database.syncDoa().Insert(new Sync(this.id,sync_id));
         database.boardDao().update_sync_id(this.id,sync_id);
-
+        this.sync_id = sync_id;
         return sync_id;
     }
 }

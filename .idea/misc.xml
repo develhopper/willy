@@ -20,12 +20,14 @@
         <entry key="app/src/main/res/layout/board_item.xml" value="0.25" />
         <entry key="app/src/main/res/layout/custom_login_button.xml" value="0.20520833333333333" />
         <entry key="app/src/main/res/layout/fragment_boards.xml" value="0.20520833333333333" />
+        <entry key="app/src/main/res/layout/fragment_pin_pager.xml" value="0.20520833333333333" />
         <entry key="app/src/main/res/layout/fragment_pins.xml" value="0.20520833333333333" />
         <entry key="app/src/main/res/layout/fragment_profile.xml" value="0.20520833333333333" />
         <entry key="app/src/main/res/layout/fragment_settings.xml" value="0.20520833333333333" />
         <entry key="app/src/main/res/layout/login_btn.xml" value="0.33" />
         <entry key="app/src/main/res/layout/login_button.xml" value="0.5" />
-        <entry key="app/src/main/res/layout/pin_item.xml" value="0.20520833333333333" />
+        <entry key="app/src/main/res/layout/pager_item.xml" value="0.20520833333333333" />
+        <entry key="app/src/main/res/layout/pin_item.xml" value="0.25" />
         <entry key="app/src/main/res/menu/bottom_navigation_menu.xml" value="0.25" />
         <entry key="app/src/main/res/menu/pin_menu.xml" value="0.2" />
         <entry key="app/src/main/res/menu/top_navigation_menu.xml" value="0.20520833333333333" />

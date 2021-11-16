@@ -6,6 +6,7 @@ import android.widget.Toast;
 
 import com.google.gson.JsonObject;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -117,14 +118,18 @@ public class ServiceHelper {
         });
     }
 
-    public void getBoardPreviews(Long id, DataListener<Pin> listener){
+    public void getBoardPreviews(Long board_id, DataListener<Pin> listener){
         String token = "Bearer "+securePreference.getString("token",true);
-        Call<DataResponse<Pin>> call = service.previewPins(token,id.toString());
+        Call<DataResponse<Pin>> call = service.previewPins(token,board_id.toString());
 
         call.enqueue(new Callback<DataResponse<Pin>>() {
             @Override
             public void onResponse(Call<DataResponse<Pin>> call, Response<DataResponse<Pin>> response) {
-                listener.success(response.body().items);
+                if(response.body()!=null && response.code()==200){
+                    List<Pin> list = response.body().items;
+                    listener.success(list);
+                }
+
             }
 
             @Override
@@ -134,6 +139,29 @@ public class ServiceHelper {
         });
     }
 
+    public void getPins(String bookmark, Long board_id, DataListener<Pin> listener){
+        String token = "Bearer "+securePreference.getString("token",true);
+
+        Call<DataResponse<Pin>> call = service.pins(token,board_id.toString(),bookmark);
+
+        call.enqueue(new Callback<DataResponse<Pin>>() {
+            @Override
+            public void onResponse(Call<DataResponse<Pin>> call, Response<DataResponse<Pin>> response) {
+                G.log(response.raw().toString());
+                if (response.body() != null && response.code() == 200) {
+                    listener.success(response.body().items);
+                    if(response.body().bookmark!=null){
+                        getPins(response.body().bookmark,board_id,listener);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<DataResponse<Pin>> call, Throwable t) {
+
+            }
+        });
+    }
     public interface ServiceListener{
         void success(Map<String,String> data);
         void fail();

@@ -15,10 +15,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import java.util.List;
+
 import ir.code4life.willy.R;
 import ir.code4life.willy.adapters.PinRecyclerAdapter;
 import ir.code4life.willy.database.AppDatabase;
 import ir.code4life.willy.database.dao.PinDao;
+import ir.code4life.willy.database.models.PinWithMedia;
+import ir.code4life.willy.http.models.Pin;
+import ir.code4life.willy.util.G;
 import ir.code4life.willy.util.Size;
 
 /**
@@ -34,6 +39,7 @@ public class PinsFragment extends Fragment {
     private PinRecyclerAdapter adapter;
     private AppDatabase database;
     private PinDao pinDao;
+    private Boolean hit_the_end=false;
 
     public PinsFragment() {
         // Required empty public constructor
@@ -69,7 +75,25 @@ public class PinsFragment extends Fragment {
         recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, LinearLayout.VERTICAL));
         recyclerView.setAdapter(adapter);
 
-        adapter.updateList(pinDao.getPinsWithMedia(board_id,Size._150x150.ordinal()));
+        adapter.updateList(pinDao.getPinsWithMedia(board_id,0));
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+
+                if (!hit_the_end && !recyclerView.canScrollVertically(1) && newState==RecyclerView.SCROLL_STATE_IDLE) {
+                    adapter.page+=1;
+                    List<Pin> list = pinDao.getPinsWithMedia(board_id, adapter.page*20);
+                    if(!list.isEmpty()){
+                        G.log(adapter.page*20+"");
+                        adapter.updateList(list);
+                    }else{
+                        hit_the_end = true;
+                    }
+                }
+            }
+        });
+
         return view;
     }
 

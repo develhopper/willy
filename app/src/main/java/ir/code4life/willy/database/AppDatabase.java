@@ -18,7 +18,7 @@ import ir.code4life.willy.database.models.Sync;
 import ir.code4life.willy.http.models.Board;
 import ir.code4life.willy.http.models.Pin;
 
-@Database(entities = {Board.class, Pin.class, Media.class, Sync.class}, version = 2, exportSchema = false)
+@Database(entities = {Board.class, Pin.class, Sync.class}, version = 4, exportSchema = false)
 @TypeConverters(Converter.class)
 public abstract class AppDatabase extends RoomDatabase {
     private static AppDatabase instance;
@@ -40,6 +40,5 @@ public abstract class AppDatabase extends RoomDatabase {
 
     public abstract BoardDao boardDao();
     public abstract PinDao pinDao();
-    public abstract MediaDao mediaDao();
     public abstract SyncDoa syncDoa();
 }

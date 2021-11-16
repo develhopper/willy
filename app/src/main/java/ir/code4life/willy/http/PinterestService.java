@@ -32,6 +32,6 @@ public interface PinterestService {
     @GET("v5/boards/{Id}/pins?page_size=3")
     Call<DataResponse<Pin>> previewPins(@Header("Authorization") String authorization, @Path("Id") String id);
 
-    @GET("v5/board/{Id}/pins")
-    Call<DataResponse<Pin>> pins(@Header("Authorization") String authorization, @Path("Id") String id);
+    @GET("v5/boards/{Id}/pins?page_size=100")
+    Call<DataResponse<Pin>> pins(@Header("Authorization") String authorization, @Path("Id") String id, @Query("bookmark") String bookmark);
 }

@@ -6,22 +6,30 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 import ir.code4life.willy.R;
+import ir.code4life.willy.activities.fragments.PinPagerFragment;
+import ir.code4life.willy.activities.fragments.PinsFragment;
 import ir.code4life.willy.database.AppDatabase;
 import ir.code4life.willy.database.models.PinWithMedia;
 import ir.code4life.willy.http.models.Pin;
+import ir.code4life.willy.util.Size;
 
 public class PinRecyclerAdapter extends RecyclerView.Adapter<PinRecyclerAdapter.ViewHolder> {
-    private final Context context;
-    private final List<PinWithMedia> list;
+    private final FragmentActivity context;
+    public final List<Pin> list;
+    public Integer page =0;
 
-    public PinRecyclerAdapter(Context context) {
+    public PinRecyclerAdapter(FragmentActivity context) {
+
         this.context = context;
         this.list = new ArrayList<>();
+
     }
 
     @NonNull
@@ -33,7 +41,7 @@ public class PinRecyclerAdapter extends RecyclerView.Adapter<PinRecyclerAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.Set(list.get(position));
+        holder.bind(position);
     }
 
     @Override
@@ -41,13 +49,12 @@ public class PinRecyclerAdapter extends RecyclerView.Adapter<PinRecyclerAdapter.
         return list.size();
     }
 
-    public void updateList(List<PinWithMedia> pins) {
-        list.clear();
+    public void updateList(List<Pin> pins) {
         list.addAll(pins);
-        this.notifyDataSetChanged();
+        this.notifyItemRangeChanged(page,pins.size());
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder {
 
         ImageView image;
         CheckBox status;
@@ -58,12 +65,23 @@ public class PinRecyclerAdapter extends RecyclerView.Adapter<PinRecyclerAdapter.
             image = itemView.findViewById(R.id.pin_image);
         }
 
-        public void Set(PinWithMedia pin) {
+        public void bind(Integer position) {
             try {
-                Picasso.get().load(pin.media.url).into(image);
-            } catch (Exception ignore) {
-                ignore.printStackTrace();
-            }
+                Pin item = list.get(position);
+                Picasso.get().load(item.getImage_url(Size._600x)).into(image);
+                String text = (item.downloaded)?"Downloaded":"Not Downloaded";
+                status.setChecked(item.downloaded);
+                status.setText(text);
+
+                image.setOnClickListener(view -> {
+                    PinPagerFragment fragment = PinPagerFragment.newInstance();
+                    fragment.setList(list,position);
+                    FragmentTransaction transaction = context.getSupportFragmentManager().beginTransaction();
+                    transaction.replace(R.id.main_fragment,fragment);
+                    transaction.addToBackStack("board");
+                    transaction.commit();
+                });
+            } catch (Exception ignore) { }
         }
     }
 }

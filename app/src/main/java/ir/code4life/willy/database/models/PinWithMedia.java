@@ -1,5 +1,7 @@
 package ir.code4life.willy.database.models;
 
+import android.os.Parcelable;
+
 import androidx.room.Embedded;
 import androidx.room.Relation;
 

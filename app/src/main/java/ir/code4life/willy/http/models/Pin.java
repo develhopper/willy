@@ -11,6 +11,7 @@ import com.google.gson.JsonObject;
 
 import java.util.Date;
 
+import ir.code4life.willy.database.AppDatabase;
 import ir.code4life.willy.util.Size;
 
 @Entity(foreignKeys = {
@@ -26,5 +27,28 @@ public class Pin {
     public Media media;
     public String title;
     public Long sync_id;
+    public Boolean downloaded=false;
+    private String image_url;
+
+    public String getImage_url() {
+        if(this.image_url!=null)
+            return image_url;
+        return media.getImage(Size._originals);
+    }
+
+    public void setImage_url(String image_url) {
+        this.image_url = image_url;
+    }
+
+    public String getImage_url(Size size){
+        if(this.image_url!=null){
+            String result = image_url.replace("/originals/","/"+size.name().substring(1)+"/");
+            if(result.endsWith(".png") && size != Size._originals){
+                result = result.replace(".png",".jpg");
+            }
+            return result;
+        }
+        return null;
+    }
 }
 
