@@ -10,6 +10,7 @@ import android.webkit.URLUtil;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.FileProvider;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -66,7 +67,7 @@ public class G {
     public static void setWallpaper(Context context,String path){
         File file = new File(path);
         if(file.exists()){
-            Uri uri = Uri.fromFile(file);
+            Uri uri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID+".provider", file);
             Intent intent = new Intent(Intent.ACTION_ATTACH_DATA);
             intent.addCategory(Intent.CATEGORY_DEFAULT);
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);

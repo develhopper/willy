@@ -122,20 +122,22 @@ public class PinsFragment extends Fragment {
         if(item.getItemId() == R.id.download_all){
             List<Download> downloads = new ArrayList<>();
             int page = 0;
-            List<Pin> pins;
-            do{
-                pins = pinDao.getAll(board_id,page++*50);
+            List<Pin> pins = pinDao.getAll(board_id,page);
+            while(!pins.isEmpty()){
                 for(Pin pin:pins){
-                    if(pin.local_path==null){
+                    if(pin.local_path==null || DownloadService.DEBUG){
                         String link = pin.getImage_url();
                         String path = FileSystem.getPinPath(board.name,link);
                         downloads.add(new Download(path, link, pin.id));
                         downloadDao.insertAll(downloads);
                     }
                 }
-            }while(!pins.isEmpty());
-            Intent intent = new Intent(DownloadService.START_DOWNLOAD);
-            requireActivity().sendBroadcast(intent);
+                G.log("page: "+page*20);
+                page++;
+                pins.clear();
+                pins.addAll(pinDao.getAll(board_id,page*20));
+            }
+            G.sendDownloadBroadcast(requireContext());
         }
         return super.onOptionsItemSelected(item);
     }

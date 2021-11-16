@@ -16,11 +16,11 @@ public interface DownloadDao {
     @Query("SELECT * FROM Download LIMIT 50 OFFSET :offset")
     List<Download> AllDownloads(Integer offset);
 
-    @Query("SELECT *,count(id) as total , (SELECT count(id) FROM Download WHERE status=1) as completed FROM Download LIMIT 1")
+    @Query("SELECT Download.id,Download.status,count(*) as total , (SELECT count(*) FROM Download WHERE status=1) as completed FROM Download LIMIT 1")
     Download downloadExtra();
 
-    @Query("SELECT * FROM Download WHERE status=0 LIMIT 10 OFFSET :offset")
-    List<Download> getPendingDownloads(Integer offset);
+    @Query("SELECT * FROM Download WHERE status=0 LIMIT 10")
+    List<Download> getPendingDownloads();
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insertAll(List<Download> list);

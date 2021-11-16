@@ -27,6 +27,7 @@ import ir.code4life.willy.util.G;
 public class DownloadService extends Service {
     public static String START_DOWNLOAD = "start download";
     public static String DOWNLOAD_PROGRESS = "download progress";
+    public static boolean DEBUG = false;
 
     private String board_name;
     private AppDatabase database;
@@ -46,7 +47,7 @@ public class DownloadService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        database = AppDatabase.getInstance(null);
+        database = AppDatabase.getInstance(getApplicationContext());
         downloadDao = database.downloadDao();
         extra = downloadDao.downloadExtra();
 
@@ -64,7 +65,6 @@ public class DownloadService extends Service {
             @Override
             public void onReceive(Context context, Intent intent) {
                 if(intent.getAction().equals(START_DOWNLOAD)){
-                    G.log("Download");
                     download();
                 }
             }
@@ -88,7 +88,6 @@ public class DownloadService extends Service {
 
         private Downloader downloader;
         private List<Download> downloads;
-        private Integer page=0;
         private Integer count = 0;
         private DownloadDao downloadDao;
         private Download extra;
@@ -96,24 +95,27 @@ public class DownloadService extends Service {
 
         public DownloadTask(DownloadDao downloadDao,Download extra){
             downloader = Downloader.newInstance();
-            downloads = downloadDao.getPendingDownloads(page);
             this.downloadDao=downloadDao;
             this.extra = extra;
         }
 
         @Override
-        protected Boolean doInBackground(Void... strings) {
+        protected Boolean doInBackground(Void... params) {
+            downloads = downloadDao.getPendingDownloads();
             while(!downloads.isEmpty()){
                 for(Download download: downloads){
                     count++;
-                    download.status = downloader.download(download);
+                    if(DEBUG){
+                        download.status = true;
+                    }else{
+                        download.status = downloader.download(download);
+                        downloadDao.updatePin(download.pin_id,download.path);
+                    }
                     downloadDao.update(download);
-                    downloadDao.updatePin(download.pin_id,download.path);
                     publishProgress(count,extra.total);
                 }
                 downloads.clear();
-                downloads.addAll(downloadDao.getPendingDownloads(page++*10));
-                G.log("list size: "+downloads.size());
+                downloads.addAll(downloadDao.getPendingDownloads());
             }
             return true;
         }
@@ -121,7 +123,6 @@ public class DownloadService extends Service {
         @Override
         protected void onProgressUpdate(Integer... values) {
             super.onProgressUpdate(values);
-            G.log("Downloading "+values[0]+" from "+values[1]);
         }
 
         @Override
