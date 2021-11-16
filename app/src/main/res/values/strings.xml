@@ -10,4 +10,8 @@
     <string name="download_all">Download All</string>
     <string name="downloads">Downloads</string>
     <string name="status">status</string>
+    <string name="download">Download</string>
+    <string name="set_as_wallpaper">Set as Wallpaper</string>
+    <string name="delete_completed">Clear Completed</string>
+    <string name="delete_all">Clear All</string>
 </resources>

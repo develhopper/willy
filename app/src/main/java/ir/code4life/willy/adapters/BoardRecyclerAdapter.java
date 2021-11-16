@@ -1,6 +1,5 @@
 package ir.code4life.willy.adapters;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,7 +7,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
@@ -22,16 +20,13 @@ import java.util.List;
 import ir.code4life.willy.R;
 import ir.code4life.willy.activities.fragments.PinsFragment;
 import ir.code4life.willy.database.AppDatabase;
-import ir.code4life.willy.database.models.BoardWithCount;
-import ir.code4life.willy.database.models.Media;
-import ir.code4life.willy.http.models.Board;
+import ir.code4life.willy.database.models.BoardWithPins;
 import ir.code4life.willy.http.models.Pin;
-import ir.code4life.willy.util.G;
 import ir.code4life.willy.util.Size;
 
 public class BoardRecyclerAdapter extends RecyclerView.Adapter<BoardRecyclerAdapter.ViewHolder> {
     private final FragmentActivity context;
-    private final List<BoardWithCount> list;
+    private final List<BoardWithPins> list;
 
     public BoardRecyclerAdapter(FragmentActivity context) {
         this.context = context;
@@ -55,7 +50,7 @@ public class BoardRecyclerAdapter extends RecyclerView.Adapter<BoardRecyclerAdap
         return list.size();
     }
 
-    public void updateList(List<BoardWithCount> boards) {
+    public void updateList(List<BoardWithPins> boards) {
         list.clear();
         list.addAll(boards);
         this.notifyDataSetChanged();
@@ -81,7 +76,7 @@ public class BoardRecyclerAdapter extends RecyclerView.Adapter<BoardRecyclerAdap
             database = AppDatabase.getInstance(itemView.getContext());
         }
 
-        public void Set(FragmentActivity context, BoardWithCount item) {
+        public void Set(FragmentActivity context, BoardWithPins item) {
             previews = database.pinDao().getPreviews(item.board.id);
             title.setText(item.board.name);
             String count = "Pins: " + item.count;

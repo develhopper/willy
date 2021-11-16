@@ -27,7 +27,7 @@ public class Pin {
     public Media media;
     public String title;
     public Long sync_id;
-    public Boolean downloaded=false;
+    public String local_path;
     private String image_url;
 
     public String getImage_url() {

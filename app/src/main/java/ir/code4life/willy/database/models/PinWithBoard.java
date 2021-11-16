@@ -5,13 +5,14 @@ import android.os.Parcelable;
 import androidx.room.Embedded;
 import androidx.room.Relation;
 
+import ir.code4life.willy.http.models.Board;
 import ir.code4life.willy.http.models.Pin;
 
-public class PinWithMedia {
+public class PinWithBoard {
 
     @Embedded
     public Pin pin;
 
-    @Relation(parentColumn = "pinId",entityColumn = "pin_id")
-    public Media media;
+    @Relation(parentColumn = "board_id",entityColumn = "id")
+    public Board board;
 }

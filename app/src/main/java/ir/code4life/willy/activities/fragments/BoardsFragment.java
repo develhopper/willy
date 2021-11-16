@@ -20,7 +20,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.List;
-import java.util.Objects;
 
 import ir.code4life.willy.R;
 import ir.code4life.willy.adapters.BoardRecyclerAdapter;
@@ -28,13 +27,9 @@ import ir.code4life.willy.database.AppDatabase;
 import ir.code4life.willy.database.dao.BoardDao;
 import ir.code4life.willy.database.dao.MediaDao;
 import ir.code4life.willy.database.dao.PinDao;
-import ir.code4life.willy.database.models.BoardWithCount;
+import ir.code4life.willy.database.models.BoardWithPins;
 import ir.code4life.willy.http.ServiceHelper;
-import ir.code4life.willy.http.models.Board;
-import ir.code4life.willy.http.models.Media;
-import ir.code4life.willy.http.models.Pin;
 import ir.code4life.willy.services.SyncService;
-import ir.code4life.willy.util.G;
 
 public class BoardsFragment extends Fragment {
 
@@ -91,7 +86,7 @@ public class BoardsFragment extends Fragment {
     }
 
     public void refreshList() {
-        List<BoardWithCount> boards = boardDao.getAllWithCount();
+        List<BoardWithPins> boards = boardDao.getAllWithCount();
         if(boards.isEmpty()){
             Intent intent = new Intent();
             intent.setAction(SyncService.SYNC_ALL);

@@ -10,15 +10,17 @@ import androidx.room.TypeConverters;
 import java.util.concurrent.ExecutorService;
 
 import ir.code4life.willy.database.dao.BoardDao;
+import ir.code4life.willy.database.dao.DownloadDao;
 import ir.code4life.willy.database.dao.MediaDao;
 import ir.code4life.willy.database.dao.PinDao;
 import ir.code4life.willy.database.dao.SyncDoa;
+import ir.code4life.willy.database.models.Download;
 import ir.code4life.willy.database.models.Media;
 import ir.code4life.willy.database.models.Sync;
 import ir.code4life.willy.http.models.Board;
 import ir.code4life.willy.http.models.Pin;
 
-@Database(entities = {Board.class, Pin.class, Sync.class}, version = 4, exportSchema = false)
+@Database(entities = {Board.class, Pin.class, Sync.class, Download.class}, version = 8, exportSchema = false)
 @TypeConverters(Converter.class)
 public abstract class AppDatabase extends RoomDatabase {
     private static AppDatabase instance;
@@ -41,4 +43,5 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract BoardDao boardDao();
     public abstract PinDao pinDao();
     public abstract SyncDoa syncDoa();
+    public abstract DownloadDao downloadDao();
 }

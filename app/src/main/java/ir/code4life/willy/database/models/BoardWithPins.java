@@ -8,7 +8,7 @@ import java.util.List;
 import ir.code4life.willy.http.models.Board;
 import ir.code4life.willy.http.models.Pin;
 
-public class BoardWithCount {
+public class BoardWithPins {
 
     @Embedded
     public Board board;

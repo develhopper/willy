@@ -8,10 +8,8 @@ import androidx.room.Transaction;
 
 import java.util.List;
 
-import ir.code4life.willy.database.models.Media;
-import ir.code4life.willy.database.models.PinWithMedia;
+import ir.code4life.willy.database.models.PinWithBoard;
 import ir.code4life.willy.http.models.Pin;
-import ir.code4life.willy.util.Size;
 
 
 @Dao
@@ -22,7 +20,14 @@ public interface PinDao {
 
     @Query("SELECT * FROM Pin "
             +" WHERE Pin.board_id=:board_id ORDER BY pinId DESC LIMIT 20 OFFSET :offset")
-    List<Pin> getPinsWithMedia(Long board_id, Integer offset);
+    List<Pin> getAll(Long board_id, Integer offset);
+
+    @Query("SELECT local_path,image_url FROM Pin WHERE board_id=:board_id ORDER BY pinId DESC")
+    List<Pin> getAll(Long board_id);
+
+    @Transaction
+    @Query("SELECT Pin.*,Board.name FROM Pin JOIN Board ON Pin.board_id=Board.id WHERE pinId=:pin_id")
+    PinWithBoard getPinWithBoard(Long pin_id);
 
     @Query("SELECT * FROM Pin WHERE board_id=:board_id  ORDER BY pinId DESC LIMIT 3")
     List<Pin> getPreviews(Long board_id);

@@ -1,9 +1,13 @@
 package ir.code4life.willy.activities;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -45,9 +49,7 @@ public class SplashActivity extends AppCompatActivity implements View.OnClickLis
         status_text = findViewById(R.id.splash_status);
         login_btn.setOnClickListener(this);
         helper = new ServiceHelper(this);
-
         handleIntent();
-
         checkLogin();
     }
 

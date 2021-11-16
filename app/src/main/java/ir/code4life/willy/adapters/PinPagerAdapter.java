@@ -5,33 +5,46 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager.widget.PagerAdapter;
 
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
 import ir.code4life.willy.R;
-import ir.code4life.willy.database.models.PinWithMedia;
+import ir.code4life.willy.database.AppDatabase;
+import ir.code4life.willy.database.dao.BoardDao;
+import ir.code4life.willy.database.dao.DownloadDao;
+import ir.code4life.willy.database.models.Download;
+import ir.code4life.willy.http.models.Board;
 import ir.code4life.willy.http.models.Pin;
+import ir.code4life.willy.util.FileSystem;
 import ir.code4life.willy.util.G;
 import ir.code4life.willy.util.Size;
 
 public class PinPagerAdapter extends RecyclerView.Adapter<PinPagerAdapter.ViewHolder> {
 
-    private Context context;
+    private FragmentActivity context;
     private List<Pin> pins;
     private LayoutInflater inflater;
+    private AppDatabase database;
+    private DownloadDao downloadDao;
+    private Board board;
 
-    public PinPagerAdapter(Context context, List<Pin> pins){
+    public PinPagerAdapter(FragmentActivity context, List<Pin> pins,Board board){
         this.pins = pins;
         this.context = context;
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        database = AppDatabase.getInstance(null);
+        downloadDao = database.downloadDao();
+        this.board = board;
     }
 
     @NonNull
@@ -52,24 +65,58 @@ public class PinPagerAdapter extends RecyclerView.Adapter<PinPagerAdapter.ViewHo
         return pins.size();
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder {
         ImageView image;
         CheckBox status;
+        ImageButton menu_view;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             image = itemView.findViewById(R.id.pin_pager_image);
             status = itemView.findViewById(R.id.pin_pager_status);
+            menu_view = itemView.findViewById(R.id.pager_context_menu);
         }
-
 
         public void bind(Pin pin){
             try {
                 Picasso.get().load(pin.getImage_url(Size._1200x)).into(image);
-                String text = (pin.downloaded)?"Downloaded":"Not Downloaded";
-                status.setChecked(pin.downloaded);
+                boolean downloaded = pin.local_path != null;
+                String text = (downloaded)?"Downloaded":"Not Downloaded";
+                status.setChecked(downloaded);
                 status.setText(text);
+                setPopupMenu(pin);
             }catch (Exception ignore){ }
+        }
+
+        private void setPopupMenu(Pin pin) {
+            menu_view.setOnClickListener(view -> {
+                PopupMenu menu = new PopupMenu(context,menu_view);
+                menu.inflate(R.menu.context_menu);
+                menu.show();
+                menu.setOnMenuItemClickListener(menuItem -> {
+                    if(menuItem.getItemId() == R.id.context_download){
+                        if(pin.local_path != null){
+                            Toast.makeText(context, "already downloaded", Toast.LENGTH_SHORT).show();
+                        }else{
+                            download(pin);
+                        }
+                    }else if(menuItem.getItemId() == R.id.context_setwallpaper){
+                        if(pin.local_path == null){
+                            download(pin);
+                        }else{
+                            G.setWallpaper(context,pin.local_path);
+                        }
+                    }
+                    return true;
+                });
+            });
+        }
+
+        private void download(Pin pin){
+            String link = pin.getImage_url();
+            String path = FileSystem.getPinPath(board.name,link);
+            downloadDao.insertOne(new Download(path,link,pin.id));
+            G.sendDownloadBroadcast(context);
         }
     }
 }
