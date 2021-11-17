@@ -29,7 +29,8 @@ public class Downloader {
             Request request = new Request.Builder().url(download.link).build();
             Response response = client.newCall(request).execute();
             assert response.body() != null;
-            FileSystem.saveImage(response.body().byteStream(),download.path);
+            FileSystem.saveImage(response.body().source(),download.path);
+            response.close();
         }catch (Exception e){
             return false;
         }

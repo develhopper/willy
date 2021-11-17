@@ -1,5 +1,7 @@
 package ir.code4life.willy.services;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -7,6 +9,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.IBinder;
+
+import androidx.core.app.NotificationCompat;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,14 +32,14 @@ public class DownloadService extends Service {
     public static String START_DOWNLOAD = "start download";
     public static String DOWNLOAD_PROGRESS = "download progress";
     public static boolean DEBUG = false;
-
-    private String board_name;
-    private AppDatabase database;
+    public static Integer NOTIFICATION_ID = 0;
     private DownloadDao downloadDao;
     protected boolean pending = false;
     protected Download extra;
 
     private BroadcastReceiver receiver;
+    private NotificationManager manager;
+
     public DownloadService() {
     }
 
@@ -47,10 +51,9 @@ public class DownloadService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        database = AppDatabase.getInstance(getApplicationContext());
+        AppDatabase database = AppDatabase.getInstance(getApplicationContext());
         downloadDao = database.downloadDao();
-        extra = downloadDao.downloadExtra();
-
+        manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         initReceiver();
     }
 
@@ -78,19 +81,37 @@ public class DownloadService extends Service {
     private void download(){
         if(!pending){
             pending = true;
+            extra = downloadDao.downloadExtra();
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), getPackageName());
+            builder.setSmallIcon(android.R.drawable.stat_sys_download);
+            builder.setContentTitle("Downloading ...");
+            builder.setOnlyAlertOnce(true);
             DownloadTask task = new DownloadTask(downloadDao,extra);
-            task.setListener(() -> pending = false);
+            task.setListener(new Listener() {
+                @Override
+                public void onComplete() {
+                    pending = false;
+                    builder.setContentTitle("Download completed");
+                    builder.setSmallIcon(android.R.drawable.stat_sys_download_done);
+                    manager.notify(NOTIFICATION_ID,builder.build());
+                }
+
+                @Override
+                public void onProgress(Integer progress, Integer total) {
+                    builder.setProgress(total,progress,false);
+                    builder.setContentText(String.format("Downloading %d of %d pending", progress,total));
+                    manager.notify(NOTIFICATION_ID,builder.build());
+                }
+            });
             task.execute();
         }
     }
 
     static class DownloadTask extends AsyncTask<Void,Integer,Boolean>{
 
-        private Downloader downloader;
-        private List<Download> downloads;
-        private Integer count = 0;
-        private DownloadDao downloadDao;
-        private Download extra;
+        private final Downloader downloader;
+        private final DownloadDao downloadDao;
+        private final Download extra;
         Listener listener;
 
         public DownloadTask(DownloadDao downloadDao,Download extra){
@@ -101,12 +122,18 @@ public class DownloadService extends Service {
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            downloads = downloadDao.getPendingDownloads();
+            Integer count = 0;
+            List<Download> downloads = downloadDao.getPendingDownloads();
             while(!downloads.isEmpty()){
                 for(Download download: downloads){
                     count++;
                     if(DEBUG){
                         download.status = true;
+                        try {
+                            Thread.sleep(500);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                     }else{
                         download.status = downloader.download(download);
                         downloadDao.updatePin(download.pin_id,download.path);
@@ -123,6 +150,7 @@ public class DownloadService extends Service {
         @Override
         protected void onProgressUpdate(Integer... values) {
             super.onProgressUpdate(values);
+            listener.onProgress(values[0],values[1]);
         }
 
         @Override
@@ -139,6 +167,7 @@ public class DownloadService extends Service {
 
 
     interface Listener{
-        public void onComplete();
+        void onComplete();
+        void onProgress(Integer progress,Integer total);
     }
 }

@@ -3,9 +3,14 @@ package ir.code4life.willy.util;
 import android.os.Environment;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+
+import okio.BufferedSource;
+import okio.Okio;
+import okio.Sink;
 
 public class FileSystem {
     public static final String ROOT_DIR = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath()+"/Willy/";
@@ -43,6 +48,20 @@ public class FileSystem {
             return false;
         }
         return true;
+    }
+
+    public static Boolean saveImage(BufferedSource source, String path){
+        try {
+            File file = new File(path);
+            Sink sink = Okio.sink(file);
+            source.readAll(sink);
+            source.close();
+            sink.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return  true;
     }
 
     public static String getPinPath(String board_name,String pin_url) {

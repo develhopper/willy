@@ -51,6 +51,7 @@ public class SplashActivity extends AppCompatActivity implements View.OnClickLis
         helper = new ServiceHelper(this);
         handleIntent();
         checkLogin();
+        G.createNotificationChannel(this);
     }
 
     private void handleIntent() {
