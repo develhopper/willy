@@ -16,10 +16,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Willy">
+
         <service
             android:name=".services.DownloadService"
-            android:enabled="true"
-            android:exported="true"/>
+            android:enabled="true" />
+
+        <service android:name=".services.SyncService" />
 
         <activity
             android:name=".activities.MainActivity"
@@ -44,8 +46,6 @@
                     android:scheme="pin1473964" />
             </intent-filter>
         </activity>
-
-        <service android:name=".services.SyncService" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

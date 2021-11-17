@@ -7,11 +7,6 @@ import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
-import com.google.gson.JsonObject;
-
-import java.util.Date;
-
-import ir.code4life.willy.database.AppDatabase;
 import ir.code4life.willy.util.Size;
 
 @Entity(foreignKeys = {

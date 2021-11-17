@@ -5,12 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -19,27 +13,25 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import java.util.List;
 
 import ir.code4life.willy.R;
 import ir.code4life.willy.adapters.BoardRecyclerAdapter;
 import ir.code4life.willy.database.AppDatabase;
 import ir.code4life.willy.database.dao.BoardDao;
-import ir.code4life.willy.database.dao.MediaDao;
-import ir.code4life.willy.database.dao.PinDao;
 import ir.code4life.willy.database.models.BoardWithPins;
 import ir.code4life.willy.http.ServiceHelper;
 import ir.code4life.willy.services.SyncService;
 
 public class BoardsFragment extends Fragment {
 
-    private ServiceHelper helper;
-    private RecyclerView recyclerView;
-    private AppDatabase database;
     private BoardRecyclerAdapter adapter;
     private BoardDao boardDao;
-    private PinDao pinDao;
-    private MediaDao mediaDao;
 
     public BoardsFragment() { }
 
@@ -57,12 +49,12 @@ public class BoardsFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_boards, container, false);
         setHasOptionsMenu(true);
-        helper = new ServiceHelper(getContext());
+        ServiceHelper helper = new ServiceHelper(getContext());
 
-        database = AppDatabase.getInstance(getContext());
+        AppDatabase database = AppDatabase.getInstance(getContext());
         boardDao = database.boardDao();
 
-        recyclerView = view.findViewById(R.id.boards_recycler);
+        RecyclerView recyclerView = view.findViewById(R.id.boards_recycler);
         
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(),2));
         

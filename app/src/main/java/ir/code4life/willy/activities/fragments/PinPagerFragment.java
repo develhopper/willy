@@ -19,9 +19,6 @@ import ir.code4life.willy.http.models.Pin;
 
 public class PinPagerFragment extends Fragment {
 
-    private static final String ARG_PINS = "pins";
-    private static final String ARG_POS = "position";
-
     private List<Pin> pins;
     private Integer position;
     private Board board;
@@ -46,7 +43,7 @@ public class PinPagerFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_pin_pager, container, false);
         ViewPager2 pager = view.findViewById(R.id.pin_pager);
-        PinPagerAdapter adapter = new PinPagerAdapter(getActivity(),pins,board);
+        PinPagerAdapter adapter = new PinPagerAdapter(requireActivity(),pins,board);
         pager.setAdapter(adapter);
         pager.setCurrentItem(position);
         return view;
@@ -64,12 +61,12 @@ public class PinPagerFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        ((AppCompatActivity)getActivity()).getSupportActionBar().hide();
+        ((AppCompatActivity)requireActivity()).getSupportActionBar().hide();
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        ((AppCompatActivity)getActivity()).getSupportActionBar().show();
+        ((AppCompatActivity)requireActivity()).getSupportActionBar().show();
     }
 }

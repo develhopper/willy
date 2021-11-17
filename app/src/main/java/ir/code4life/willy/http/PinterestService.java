@@ -8,7 +8,6 @@ import ir.code4life.willy.http.models.Board;
 import ir.code4life.willy.http.models.DataResponse;
 import ir.code4life.willy.http.models.Pin;
 import retrofit2.Call;
-import retrofit2.Response;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;

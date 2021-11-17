@@ -50,10 +50,10 @@ public class DownloadRecyclerAdapter extends RecyclerView.Adapter<DownloadRecycl
     public void setList(List<Download> list){
         this.list.clear();
         this.list.addAll(list);
-        notifyDataSetChanged();
+        notifyItemRangeChanged(0,list.size());
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder{
+    static class ViewHolder extends RecyclerView.ViewHolder{
 
         TextView link;
         TextView status;

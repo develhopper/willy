@@ -1,40 +1,29 @@
 package ir.code4life.willy.services;
 
-import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 
 import androidx.core.app.NotificationCompat;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Locale;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 import ir.code4life.willy.database.AppDatabase;
-import ir.code4life.willy.database.dao.BoardDao;
 import ir.code4life.willy.database.dao.DownloadDao;
-import ir.code4life.willy.database.dao.PinDao;
-import ir.code4life.willy.database.models.BoardWithPins;
 import ir.code4life.willy.database.models.Download;
-import ir.code4life.willy.database.models.PinWithBoard;
-import ir.code4life.willy.http.models.Pin;
 import ir.code4life.willy.util.Downloader;
-import ir.code4life.willy.util.G;
 
 public class DownloadService extends Service {
     public static String START_DOWNLOAD = "start download";
-    public static String DOWNLOAD_PROGRESS = "download progress";
     public static boolean DEBUG = false;
     public static Integer NOTIFICATION_ID = 0;
     private DownloadDao downloadDao;
@@ -103,7 +92,7 @@ public class DownloadService extends Service {
                 @Override
                 public void onProgress(Integer progress, Integer total) {
                     builder.setProgress(total,progress,false);
-                    builder.setContentText(String.format("Downloading %d of %d pending", progress,total));
+                    builder.setContentText(String.format(Locale.ENGLISH,"Downloading %d of %d pending", progress,total));
                     manager.notify(NOTIFICATION_ID,builder.build());
                 }
             });
@@ -131,11 +120,6 @@ public class DownloadService extends Service {
                         count++;
                         if(DEBUG){
                             download.status = true;
-                            try {
-                                Thread.sleep(500);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
                         }else{
                             download.status = downloader.download(download);
                             downloadDao.updatePin(download.pin_id,download.path);

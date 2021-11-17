@@ -53,7 +53,7 @@ public class BoardRecyclerAdapter extends RecyclerView.Adapter<BoardRecyclerAdap
     public void updateList(List<BoardWithPins> boards) {
         list.clear();
         list.addAll(boards);
-        this.notifyDataSetChanged();
+        this.notifyItemRangeChanged(0,boards.size());
     }
 
 

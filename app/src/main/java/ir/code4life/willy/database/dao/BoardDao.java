@@ -14,16 +14,9 @@ import ir.code4life.willy.http.models.Board;
 @Dao
 public interface BoardDao {
 
-    @Query("SELECT * FROM board")
-    List<Board> getAll();
-
     @Transaction
     @Query("SELECT Board.*,count(pinId) AS count FROM Board JOIN Pin ON Board.id=Pin.board_id GROUP BY Board.id")
     List<BoardWithPins> getAllWithCount();
-
-    @Transaction
-    @Query("SELECT Board.id,Board.name,Pin.* FROM Board JOIN Pin ON Pin.board_id=Board.id WHERE Board.id=:board_id")
-    BoardWithPins getBoardWithPins(Long board_id);
 
     @Query("SELECT * FROM Board WHERE id=:board_id")
     Board getBoard(Long board_id);

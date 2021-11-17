@@ -1,14 +1,6 @@
 package ir.code4life.willy.activities.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.StaggeredGridLayoutManager;
-
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,9 +9,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import ir.code4life.willy.R;
 import ir.code4life.willy.adapters.PinRecyclerAdapter;
@@ -33,7 +29,6 @@ import ir.code4life.willy.http.models.Pin;
 import ir.code4life.willy.services.DownloadService;
 import ir.code4life.willy.util.FileSystem;
 import ir.code4life.willy.util.G;
-import ir.code4life.willy.util.Size;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -93,7 +88,7 @@ public class PinsFragment extends Fragment {
         adapter.updateList(pinDao.getAll(board_id,0));
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
 
                 if (!hit_the_end && !recyclerView.canScrollVertically(1) && newState==RecyclerView.SCROLL_STATE_IDLE) {

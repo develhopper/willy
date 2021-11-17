@@ -1,17 +1,17 @@
 package ir.code4life.willy.util;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.text.style.IconMarginSpan;
 import android.util.Base64;
-import android.util.Log;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
+
 import ir.code4life.willy.BuildConfig;
 
 public class SecurePreference {
-    private SharedPreferences sharedPreferences;
+    private final SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor = null;
 
     public SecurePreference(Context context, String name){
@@ -47,6 +47,7 @@ public class SecurePreference {
             if(value==null)
                 return null;
             SecretKeySpec secret = new SecretKeySpec(BuildConfig.HASH_SECRET.getBytes(), "AES");
+            @SuppressLint("GetInstance")
             Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
             cipher.init(Cipher.ENCRYPT_MODE,secret);
             byte [] encrypted = cipher.doFinal(value.getBytes());
@@ -60,6 +61,7 @@ public class SecurePreference {
     private String decrypt(String value){
         try {
             SecretKeySpec secret = new SecretKeySpec(BuildConfig.HASH_SECRET.getBytes(), "AES");
+            @SuppressLint("GetInstance")
             Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
             cipher.init(Cipher.DECRYPT_MODE, secret);
             byte [] encrypted = Base64.decode(value,Base64.DEFAULT);

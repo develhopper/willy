@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.IBinder;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -17,13 +16,10 @@ import java.util.List;
 
 import ir.code4life.willy.database.AppDatabase;
 import ir.code4life.willy.database.dao.BoardDao;
-import ir.code4life.willy.database.dao.MediaDao;
 import ir.code4life.willy.database.dao.PinDao;
-import ir.code4life.willy.database.dao.SyncDoa;
 import ir.code4life.willy.http.ServiceHelper;
 import ir.code4life.willy.http.models.Board;
 import ir.code4life.willy.http.models.Pin;
-import ir.code4life.willy.util.G;
 
 public class SyncService extends Service {
     public static String SYNC_ALL="pinterest_sync_all";
@@ -31,11 +27,9 @@ public class SyncService extends Service {
     public static String SYNCED="pinterest_synced";
 
     private ServiceHelper helper;
-    private AppDatabase database;
     private BoardDao boardDao;
     private PinDao pinDao;
     private BroadcastReceiver receiver;
-    private SyncDoa syncDao;
     private Boolean pending = false;
 
     @Nullable
@@ -49,10 +43,9 @@ public class SyncService extends Service {
         super.onCreate();
 
         helper= new ServiceHelper(getApplicationContext());
-        database = AppDatabase.getInstance(getApplicationContext());
+        AppDatabase database = AppDatabase.getInstance(getApplicationContext());
         boardDao = database.boardDao();
         pinDao = database.pinDao();
-        syncDao = database.syncDoa();
 
         receiver = new BroadcastReceiver() {
             @Override
@@ -61,9 +54,6 @@ public class SyncService extends Service {
                 if (SYNC_ALL.equals(action)) {
                     sync_all();
                     pending = true;
-                }else if(SYNC_BOARD.equals(action)){
-                    Long board_id = intent.getLongExtra("board_id",0);
-                    sync_board(board_id);
                 }
             }
         };
@@ -79,12 +69,6 @@ public class SyncService extends Service {
         unregisterReceiver(receiver);
     }
 
-    public void sync_board(Long board_id){
-        if(pending){
-            Toast.makeText(getApplicationContext(), "Sync pending", Toast.LENGTH_SHORT).show();
-            return;
-        }
-    }
 
     public void sync_all(){
         if(pending){
@@ -99,9 +83,7 @@ public class SyncService extends Service {
                 Board board = iterator.next();
                 ids.add(board.id);
                 board.create_syncId();
-                helper.getBoardPreviews(board.id, list -> {
-                    pinDao.insertAll(list);
-                });
+                helper.getBoardPreviews(board.id, list -> pinDao.insertAll(list));
                 if(!iterator.hasNext()){
                     Intent broadcast = new Intent(SYNCED);
                     sendBroadcast(broadcast);
@@ -114,20 +96,17 @@ public class SyncService extends Service {
 
     public void sync_boards(List<Board> boards){
         for(Board board: boards){
-            helper.getPins(null, board.id, new ServiceHelper.DataListener<Pin>() {
-                @Override
-                public void success(List<Pin> list) {
-                    List<Long> ids = new ArrayList<>();
-                    Long sync_id = board.getSync_id();
+            helper.getPins(null, board.id, list -> {
+                List<Long> ids = new ArrayList<>();
+                Long sync_id = board.getSync_id();
 
-                    for(Pin pin : list){
-                        ids.add(pin.id);
-                    }
-                    pinDao.insertAll(list);
-
-                    pinDao.set_sync_id(ids,sync_id);
-                    pinDao.sync_removed_items(board.id,sync_id);
+                for(Pin pin : list){
+                    ids.add(pin.id);
                 }
+                pinDao.insertAll(list);
+
+                pinDao.set_sync_id(ids,sync_id);
+                pinDao.sync_removed_items(board.id,sync_id);
             });
         }
         pending = false;

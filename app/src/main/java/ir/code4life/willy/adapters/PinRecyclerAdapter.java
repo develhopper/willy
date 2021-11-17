@@ -17,8 +17,13 @@ import java.util.ArrayList;
 import java.util.List;
 import ir.code4life.willy.R;
 import ir.code4life.willy.activities.fragments.PinPagerFragment;
+import ir.code4life.willy.database.AppDatabase;
+import ir.code4life.willy.database.dao.DownloadDao;
+import ir.code4life.willy.database.models.Download;
 import ir.code4life.willy.http.models.Board;
 import ir.code4life.willy.http.models.Pin;
+import ir.code4life.willy.util.FileSystem;
+import ir.code4life.willy.util.G;
 import ir.code4life.willy.util.Size;
 
 public class PinRecyclerAdapter extends RecyclerView.Adapter<PinRecyclerAdapter.ViewHolder> {
@@ -26,12 +31,12 @@ public class PinRecyclerAdapter extends RecyclerView.Adapter<PinRecyclerAdapter.
     public final List<Pin> list;
     public Integer page = 0;
     private Board board;
+    private final DownloadDao downloadDao;
 
     public PinRecyclerAdapter(FragmentActivity context) {
-
         this.context = context;
         this.list = new ArrayList<>();
-
+        downloadDao = AppDatabase.getInstance(null).downloadDao();
     }
 
     public void setBoard(Board board){
@@ -92,15 +97,23 @@ public class PinRecyclerAdapter extends RecyclerView.Adapter<PinRecyclerAdapter.
                 });
 
                 image.setOnLongClickListener(view -> {
-                    PopupMenu menu = new PopupMenu(context,view, Gravity.TOP|Gravity.LEFT);
+                    PopupMenu menu = new PopupMenu(context,view, Gravity.TOP);
                     menu.inflate(R.menu.context_menu);
                     menu.show();
                     menu.setOnMenuItemClickListener(menuItem -> {
                         Toast.makeText(context, menuItem.getTitle(), Toast.LENGTH_SHORT).show();
                         if(menuItem.getItemId() == R.id.context_download){
-                            // TODO
+                            if(item.local_path != null){
+                                Toast.makeText(context, "already downloaded", Toast.LENGTH_SHORT).show();
+                            }else{
+                                download(item);
+                            }
                         }else if(menuItem.getItemId() == R.id.context_setwallpaper){
-                            // TODO
+                            if(item.local_path == null){
+                                download(item);
+                            }else{
+                                G.setWallpaper(context,item.local_path);
+                            }
                         }
                         return true;
                     });
@@ -108,6 +121,13 @@ public class PinRecyclerAdapter extends RecyclerView.Adapter<PinRecyclerAdapter.
                 });
 
             } catch (Exception ignore) { }
+        }
+
+        private void download(Pin pin){
+            String link = pin.getImage_url();
+            String path = FileSystem.getPinPath(board.name,link);
+            downloadDao.insertOne(new Download(path,link,pin.id));
+            G.sendDownloadBroadcast(context);
         }
     }
 }

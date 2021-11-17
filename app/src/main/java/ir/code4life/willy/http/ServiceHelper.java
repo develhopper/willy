@@ -4,9 +4,10 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+
 import com.google.gson.JsonObject;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,7 +15,6 @@ import java.util.Map;
 import ir.code4life.willy.BuildConfig;
 import ir.code4life.willy.http.models.Board;
 import ir.code4life.willy.http.models.DataResponse;
-import ir.code4life.willy.http.models.Media;
 import ir.code4life.willy.http.models.Pin;
 import ir.code4life.willy.util.G;
 import ir.code4life.willy.util.SecurePreference;
@@ -49,19 +49,21 @@ public class ServiceHelper {
         Call<JsonObject> call = service.authenticate(authorization,fields);
         call.enqueue(new Callback<JsonObject>() {
             @Override
-            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+            public void onResponse(@NonNull Call<JsonObject> call, @NonNull Response<JsonObject> response) {
                 if(response.code() == 200){
                     JsonObject json = response.body();
-                    SecurePreference securePreference = new SecurePreference(context,"SharedPref");
-                    securePreference.putString("token",json.get("access_token").getAsString(),true);
-                    securePreference.putString("refresh_token",json.get("refresh_token").getAsString(),true);
-                    securePreference.apply();
-                    listener.success(null);
+                    if(json != null){
+                        SecurePreference securePreference = new SecurePreference(context,"SharedPref");
+                        securePreference.putString("token",json.get("access_token").getAsString(),true);
+                        securePreference.putString("refresh_token",json.get("refresh_token").getAsString(),true);
+                        securePreference.apply();
+                        listener.success(null);
+                    }
                 }
             }
 
             @Override
-            public void onFailure(Call<JsonObject> call, Throwable t) {
+            public void onFailure(@NonNull Call<JsonObject> call, @NonNull Throwable t) {
                 Log.d("DEBUG",t.getMessage());
             }
         });
@@ -78,18 +80,20 @@ public class ServiceHelper {
 
         call.enqueue(new Callback<JsonObject>() {
             @Override
-            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+            public void onResponse(@NonNull Call<JsonObject> call, @NonNull Response<JsonObject> response) {
                 if(response.code() == 200){
                     JsonObject json = response.body();
-                    securePreference.putString("avatar",json.get("profile_image").getAsString(),false);
-                    securePreference.putString("username",json.get("username").getAsString(),false);
-                    securePreference.apply();
-                    listener.success(null);
+                    if(json != null){
+                        securePreference.putString("avatar",json.get("profile_image").getAsString(),false);
+                        securePreference.putString("username",json.get("username").getAsString(),false);
+                        securePreference.apply();
+                        listener.success(null);
+                    }
                 }
             }
 
             @Override
-            public void onFailure(Call<JsonObject> call, Throwable t) {
+            public void onFailure(@NonNull Call<JsonObject> call, @NonNull Throwable t) {
 
             }
         });
@@ -101,7 +105,7 @@ public class ServiceHelper {
 
         call.enqueue(new Callback<DataResponse<Board>>() {
             @Override
-            public void onResponse(Call<DataResponse<Board>> call, Response<DataResponse<Board>> response) {
+            public void onResponse(@NonNull Call<DataResponse<Board>> call, @NonNull Response<DataResponse<Board>> response) {
                 DataResponse<Board> boards = response.body();
                 if (boards != null) {
                     listener.success(boards.items);
@@ -112,7 +116,7 @@ public class ServiceHelper {
             }
 
             @Override
-            public void onFailure(Call<DataResponse<Board>> call, Throwable t) {
+            public void onFailure(@NonNull Call<DataResponse<Board>> call, @NonNull Throwable t) {
 
             }
         });
@@ -124,7 +128,7 @@ public class ServiceHelper {
 
         call.enqueue(new Callback<DataResponse<Pin>>() {
             @Override
-            public void onResponse(Call<DataResponse<Pin>> call, Response<DataResponse<Pin>> response) {
+            public void onResponse(@NonNull Call<DataResponse<Pin>> call, @NonNull Response<DataResponse<Pin>> response) {
                 if(response.body()!=null && response.code()==200){
                     List<Pin> list = response.body().items;
                     listener.success(list);
@@ -133,7 +137,7 @@ public class ServiceHelper {
             }
 
             @Override
-            public void onFailure(Call<DataResponse<Pin>> call, Throwable t) {
+            public void onFailure(@NonNull Call<DataResponse<Pin>> call, @NonNull Throwable t) {
 
             }
         });
@@ -146,7 +150,7 @@ public class ServiceHelper {
 
         call.enqueue(new Callback<DataResponse<Pin>>() {
             @Override
-            public void onResponse(Call<DataResponse<Pin>> call, Response<DataResponse<Pin>> response) {
+            public void onResponse(@NonNull Call<DataResponse<Pin>> call, @NonNull Response<DataResponse<Pin>> response) {
                 G.log(response.raw().toString());
                 if (response.body() != null && response.code() == 200) {
                     listener.success(response.body().items);
@@ -157,7 +161,7 @@ public class ServiceHelper {
             }
 
             @Override
-            public void onFailure(Call<DataResponse<Pin>> call, Throwable t) {
+            public void onFailure(@NonNull Call<DataResponse<Pin>> call, @NonNull Throwable t) {
 
             }
         });

@@ -1,6 +1,5 @@
 package ir.code4life.willy.adapters;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +19,6 @@ import java.util.List;
 
 import ir.code4life.willy.R;
 import ir.code4life.willy.database.AppDatabase;
-import ir.code4life.willy.database.dao.BoardDao;
 import ir.code4life.willy.database.dao.DownloadDao;
 import ir.code4life.willy.database.models.Download;
 import ir.code4life.willy.http.models.Board;
@@ -31,18 +29,15 @@ import ir.code4life.willy.util.Size;
 
 public class PinPagerAdapter extends RecyclerView.Adapter<PinPagerAdapter.ViewHolder> {
 
-    private FragmentActivity context;
-    private List<Pin> pins;
-    private LayoutInflater inflater;
-    private AppDatabase database;
-    private DownloadDao downloadDao;
-    private Board board;
+    private final FragmentActivity context;
+    private final List<Pin> pins;
+    private final DownloadDao downloadDao;
+    private final Board board;
 
     public PinPagerAdapter(FragmentActivity context, List<Pin> pins,Board board){
         this.pins = pins;
         this.context = context;
-        inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        database = AppDatabase.getInstance(null);
+        AppDatabase database = AppDatabase.getInstance(null);
         downloadDao = database.downloadDao();
         this.board = board;
     }

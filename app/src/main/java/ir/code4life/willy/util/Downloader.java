@@ -1,7 +1,5 @@
 package ir.code4life.willy.util;
 
-import android.webkit.URLUtil;
-
 import ir.code4life.willy.database.models.Download;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -10,7 +8,7 @@ import okhttp3.Response;
 public class Downloader {
 
     private static Downloader INSTANCE;
-    private OkHttpClient client;
+    private final OkHttpClient client;
     private Downloader(){
         client = new OkHttpClient();
     }

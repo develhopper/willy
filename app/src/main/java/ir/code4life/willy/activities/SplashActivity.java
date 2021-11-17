@@ -1,38 +1,21 @@
 package ir.code4life.willy.activities;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.JsonObject;
+import androidx.appcompat.app.AppCompatActivity;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import ir.code4life.willy.BuildConfig;
 import ir.code4life.willy.R;
 import ir.code4life.willy.http.ServiceHelper;
-import ir.code4life.willy.util.G;
-import ir.code4life.willy.http.HttpClient;
-import ir.code4life.willy.http.PinterestService;
 import ir.code4life.willy.ui.LoginButton;
-import ir.code4life.willy.util.SecurePreference;
-import okhttp3.Credentials;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
+import ir.code4life.willy.util.G;
 
 public class SplashActivity extends AppCompatActivity implements View.OnClickListener {
 
