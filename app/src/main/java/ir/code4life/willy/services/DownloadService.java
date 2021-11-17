@@ -8,7 +8,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 
 import androidx.core.app.NotificationCompat;
 
@@ -16,6 +18,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 import ir.code4life.willy.database.AppDatabase;
 import ir.code4life.willy.database.dao.BoardDao;
@@ -86,8 +90,8 @@ public class DownloadService extends Service {
             builder.setSmallIcon(android.R.drawable.stat_sys_download);
             builder.setContentTitle("Downloading ...");
             builder.setOnlyAlertOnce(true);
-            DownloadTask task = new DownloadTask(downloadDao,extra);
-            task.setListener(new Listener() {
+            TaskRunner task = new TaskRunner(downloadDao,extra);
+            task.execute(new Listener() {
                 @Override
                 public void onComplete() {
                     pending = false;
@@ -103,68 +107,50 @@ public class DownloadService extends Service {
                     manager.notify(NOTIFICATION_ID,builder.build());
                 }
             });
-            task.execute();
         }
     }
 
-    static class DownloadTask extends AsyncTask<Void,Integer,Boolean>{
-
-        private final Downloader downloader;
+    static class TaskRunner{
+        private final Executor executor = Executors.newSingleThreadExecutor();
+        private final Handler handler = new Handler(Looper.getMainLooper());
+        private final Downloader downloader = Downloader.newInstance();
         private final DownloadDao downloadDao;
         private final Download extra;
-        Listener listener;
 
-        public DownloadTask(DownloadDao downloadDao,Download extra){
-            downloader = Downloader.newInstance();
-            this.downloadDao=downloadDao;
+        public TaskRunner(DownloadDao downloadDao,Download extra){
+            this.downloadDao = downloadDao;
             this.extra = extra;
         }
 
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            Integer count = 0;
-            List<Download> downloads = downloadDao.getPendingDownloads();
-            while(!downloads.isEmpty()){
-                for(Download download: downloads){
-                    count++;
-                    if(DEBUG){
-                        download.status = true;
-                        try {
-                            Thread.sleep(500);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
+        public void execute(Listener listener){
+            executor.execute(() -> {
+                Integer count = 0;
+                List<Download> downloads = downloadDao.getPendingDownloads();
+                while(!downloads.isEmpty()){
+                    for(Download download: downloads){
+                        count++;
+                        if(DEBUG){
+                            download.status = true;
+                            try {
+                                Thread.sleep(500);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }else{
+                            download.status = downloader.download(download);
+                            downloadDao.updatePin(download.pin_id,download.path);
                         }
-                    }else{
-                        download.status = downloader.download(download);
-                        downloadDao.updatePin(download.pin_id,download.path);
+                        downloadDao.update(download);
+                        listener.onProgress(count,extra.total);
                     }
-                    downloadDao.update(download);
-                    publishProgress(count,extra.total);
+                    downloads.clear();
+                    downloads.addAll(downloadDao.getPendingDownloads());
                 }
-                downloads.clear();
-                downloads.addAll(downloadDao.getPendingDownloads());
-            }
-            return true;
-        }
 
-        @Override
-        protected void onProgressUpdate(Integer... values) {
-            super.onProgressUpdate(values);
-            listener.onProgress(values[0],values[1]);
-        }
-
-        @Override
-        protected void onPostExecute(Boolean aBoolean) {
-            super.onPostExecute(aBoolean);
-            if(listener!=null)
-                listener.onComplete();
-        }
-
-        protected void setListener(Listener listener){
-            this.listener = listener;
+                handler.post(listener::onComplete);
+            });
         }
     }
-
 
     interface Listener{
         void onComplete();
