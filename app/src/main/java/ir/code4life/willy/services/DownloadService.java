@@ -125,7 +125,7 @@ public class DownloadService extends Service {
                             downloadDao.updatePin(download.pin_id,download.path);
                         }
                         downloadDao.update(download);
-                        listener.onProgress(count,extra.total);
+                        listener.onProgress(count,extra.total-extra.completed);
                     }
                     downloads.clear();
                     downloads.addAll(downloadDao.getPendingDownloads());
