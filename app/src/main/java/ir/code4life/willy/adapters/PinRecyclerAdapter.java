@@ -1,4 +1,5 @@
 package ir.code4life.willy.adapters;
+
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,17 +13,18 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import ir.code4life.willy.R;
 import ir.code4life.willy.activities.fragments.PinPagerFragment;
 import ir.code4life.willy.database.AppDatabase;
 import ir.code4life.willy.database.dao.DownloadDao;
-import ir.code4life.willy.database.models.Download;
 import ir.code4life.willy.http.models.Board;
 import ir.code4life.willy.http.models.Pin;
-import ir.code4life.willy.util.FileSystem;
 import ir.code4life.willy.util.G;
 import ir.code4life.willy.util.Size;
 

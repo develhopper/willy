@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -25,7 +24,6 @@ import ir.code4life.willy.adapters.BoardRecyclerAdapter;
 import ir.code4life.willy.database.AppDatabase;
 import ir.code4life.willy.database.dao.BoardDao;
 import ir.code4life.willy.database.models.BoardWithPins;
-import ir.code4life.willy.http.ServiceHelper;
 import ir.code4life.willy.services.SyncService;
 
 public class BoardsFragment extends Fragment {
@@ -49,7 +47,6 @@ public class BoardsFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_boards, container, false);
         setHasOptionsMenu(true);
-        ServiceHelper helper = new ServiceHelper(getContext());
 
         AppDatabase database = AppDatabase.getInstance(getContext());
         boardDao = database.boardDao();
@@ -67,7 +64,6 @@ public class BoardsFragment extends Fragment {
             @Override
             public void onReceive(Context context, Intent intent) {
                 if(intent.getAction().equals(SyncService.SYNCED)){
-                    Log.d("DEBUG", "synced");
                     refreshList();
                 }
             }

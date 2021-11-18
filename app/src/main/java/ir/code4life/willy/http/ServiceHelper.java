@@ -64,7 +64,6 @@ public class ServiceHelper {
 
             @Override
             public void onFailure(@NonNull Call<JsonObject> call, @NonNull Throwable t) {
-                Log.d("DEBUG",t.getMessage());
             }
         });
     }
@@ -151,7 +150,6 @@ public class ServiceHelper {
         call.enqueue(new Callback<DataResponse<Pin>>() {
             @Override
             public void onResponse(@NonNull Call<DataResponse<Pin>> call, @NonNull Response<DataResponse<Pin>> response) {
-                G.log(response.raw().toString());
                 if (response.body() != null && response.code() == 200) {
                     listener.success(response.body().items);
                     if(response.body().bookmark!=null){

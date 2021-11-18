@@ -1,16 +1,9 @@
 package ir.code4life.willy.util;
 
-import android.content.Context;
 import android.os.Environment;
-import android.widget.Toast;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
 
-import ir.code4life.willy.database.dao.DownloadDao;
-import ir.code4life.willy.http.models.Pin;
 import okio.BufferedSource;
 import okio.Okio;
 import okio.Sink;

@@ -7,7 +7,6 @@ import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
@@ -20,10 +19,8 @@ import java.util.List;
 import ir.code4life.willy.R;
 import ir.code4life.willy.database.AppDatabase;
 import ir.code4life.willy.database.dao.DownloadDao;
-import ir.code4life.willy.database.models.Download;
 import ir.code4life.willy.http.models.Board;
 import ir.code4life.willy.http.models.Pin;
-import ir.code4life.willy.util.FileSystem;
 import ir.code4life.willy.util.G;
 import ir.code4life.willy.util.Size;
 

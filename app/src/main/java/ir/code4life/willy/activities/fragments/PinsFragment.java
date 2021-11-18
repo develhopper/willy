@@ -127,7 +127,6 @@ public class PinsFragment extends Fragment {
                         downloadDao.insertAll(downloads);
                     }
                 }
-                G.log("page: "+page*20);
                 page++;
                 pins.clear();
                 pins.addAll(pinDao.getAll(board_id,page*20));
