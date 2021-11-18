@@ -120,7 +120,7 @@ public class PinsFragment extends Fragment {
             List<Pin> pins = pinDao.getAll(board_id,page);
             while(!pins.isEmpty()){
                 for(Pin pin:pins){
-                    if(pin.local_path==null || DownloadService.DEBUG){
+                    if(!FileSystem.Exists(pin.local_path) || DownloadService.DEBUG){
                         String link = pin.getImage_url();
                         String path = FileSystem.getPinPath(board.name,link);
                         downloads.add(new Download(path, link, pin.id));
