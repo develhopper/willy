@@ -90,28 +90,13 @@ public class PinPagerAdapter extends RecyclerView.Adapter<PinPagerAdapter.ViewHo
                 menu.show();
                 menu.setOnMenuItemClickListener(menuItem -> {
                     if(menuItem.getItemId() == R.id.context_download){
-                        if(pin.local_path != null){
-                            Toast.makeText(context, "already downloaded", Toast.LENGTH_SHORT).show();
-                        }else{
-                            download(pin);
-                        }
+                        G.download(context,pin,board.name,downloadDao);
                     }else if(menuItem.getItemId() == R.id.context_setwallpaper){
-                        if(pin.local_path == null){
-                            download(pin);
-                        }else{
-                            G.setWallpaper(context,pin.local_path);
-                        }
+                        G.setWallpaper(context,pin,board.name,downloadDao);
                     }
                     return true;
                 });
             });
-        }
-
-        private void download(Pin pin){
-            String link = pin.getImage_url();
-            String path = FileSystem.getPinPath(board.name,link);
-            downloadDao.insertOne(new Download(path,link,pin.id));
-            G.sendDownloadBroadcast(context);
         }
     }
 }

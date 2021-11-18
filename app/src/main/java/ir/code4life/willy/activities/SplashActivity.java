@@ -51,7 +51,7 @@ public class SplashActivity extends AppCompatActivity implements View.OnClickLis
 
                 @Override
                 public void fail() {
-
+                    Toast.makeText(SplashActivity.this, "Network error", Toast.LENGTH_SHORT).show();
                 }
             });
         }

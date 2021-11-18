@@ -94,7 +94,7 @@ public class ServiceHelper {
 
             @Override
             public void onFailure(@NonNull Call<JsonObject> call, @NonNull Throwable t) {
-
+                listener.fail();
             }
         });
     }

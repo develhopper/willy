@@ -20,7 +20,6 @@
         <service
             android:name=".services.DownloadService"
             android:enabled="true" />
-
         <service android:name=".services.SyncService" />
 
         <activity

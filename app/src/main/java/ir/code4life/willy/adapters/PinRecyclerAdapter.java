@@ -103,17 +103,9 @@ public class PinRecyclerAdapter extends RecyclerView.Adapter<PinRecyclerAdapter.
                     menu.setOnMenuItemClickListener(menuItem -> {
                         Toast.makeText(context, menuItem.getTitle(), Toast.LENGTH_SHORT).show();
                         if(menuItem.getItemId() == R.id.context_download){
-                            if(item.local_path != null){
-                                Toast.makeText(context, "already downloaded", Toast.LENGTH_SHORT).show();
-                            }else{
-                                download(item);
-                            }
+                            G.download(context,item,board.name,downloadDao);
                         }else if(menuItem.getItemId() == R.id.context_setwallpaper){
-                            if(item.local_path == null){
-                                download(item);
-                            }else{
-                                G.setWallpaper(context,item.local_path);
-                            }
+                            G.setWallpaper(context,item,board.name,downloadDao);
                         }
                         return true;
                     });
@@ -121,13 +113,6 @@ public class PinRecyclerAdapter extends RecyclerView.Adapter<PinRecyclerAdapter.
                 });
 
             } catch (Exception ignore) { }
-        }
-
-        private void download(Pin pin){
-            String link = pin.getImage_url();
-            String path = FileSystem.getPinPath(board.name,link);
-            downloadDao.insertOne(new Download(path,link,pin.id));
-            G.sendDownloadBroadcast(context);
         }
     }
 }

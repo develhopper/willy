@@ -1,12 +1,16 @@
 package ir.code4life.willy.util;
 
+import android.content.Context;
 import android.os.Environment;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import ir.code4life.willy.database.dao.DownloadDao;
+import ir.code4life.willy.http.models.Pin;
 import okio.BufferedSource;
 import okio.Okio;
 import okio.Sink;
@@ -30,25 +34,6 @@ public class FileSystem {
         return null;
     }
 
-    public static Boolean saveImage(InputStream inputStream,String path){
-        File file = new File(path);
-        try {
-            OutputStream outputStream = new FileOutputStream(file);
-            byte [] buffer = new byte[4 * 1024];
-            int read;
-
-            while((read = inputStream.read(buffer)) != -1){
-                outputStream.write(buffer,0,read);
-            }
-            outputStream.flush();
-            outputStream.close();
-            inputStream.close();
-        }catch (Exception ignore){
-            return false;
-        }
-        return true;
-    }
-
     public static void saveImage(BufferedSource source, String path){
         try {
             File file = new File(path);
@@ -66,7 +51,8 @@ public class FileSystem {
     }
 
     public static Boolean Exists(String path){
-        File file = new File(path);
-        return file.exists();
+        if(path == null)
+            return false;
+        return new File(path).exists();
     }
 }

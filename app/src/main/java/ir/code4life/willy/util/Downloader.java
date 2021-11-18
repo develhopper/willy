@@ -1,5 +1,7 @@
 package ir.code4life.willy.util;
 
+import android.util.Log;
+
 import ir.code4life.willy.database.models.Download;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -30,6 +32,7 @@ public class Downloader {
             FileSystem.saveImage(response.body().source(),download.path);
             response.close();
         }catch (Exception e){
+            e.printStackTrace();
             return false;
         }
         return true;

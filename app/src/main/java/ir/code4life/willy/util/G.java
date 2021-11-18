@@ -11,6 +11,7 @@ import android.os.Build;
 import android.os.Environment;
 import android.util.Log;
 import android.webkit.URLUtil;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -20,6 +21,9 @@ import java.io.File;
 
 import ir.code4life.willy.BuildConfig;
 import ir.code4life.willy.R;
+import ir.code4life.willy.database.dao.DownloadDao;
+import ir.code4life.willy.database.models.Download;
+import ir.code4life.willy.http.models.Pin;
 import ir.code4life.willy.services.DownloadService;
 
 public class G {
@@ -56,9 +60,9 @@ public class G {
         context.sendBroadcast(intent);
     }
 
-    public static void setWallpaper(Context context, String path) {
-        File file = new File(path);
-        if (file.exists()) {
+    public static void setWallpaper(Context context, Pin pin, String board_name, DownloadDao downloadDao) {
+        if (FileSystem.Exists(pin.local_path)) {
+            File file = new File(pin.local_path);
             Uri uri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider", file);
             Intent intent = new Intent(Intent.ACTION_ATTACH_DATA);
             intent.addCategory(Intent.CATEGORY_DEFAULT);
@@ -66,6 +70,8 @@ public class G {
             intent.setDataAndType(uri, "image/*");
             intent.putExtra("mimeType", "image/*");
             context.startActivity(Intent.createChooser(intent, "Set as:"));
+        }else{
+            download(context,pin,board_name,downloadDao);
         }
     }
 
@@ -78,6 +84,17 @@ public class G {
             channel.setDescription(description);
             NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
+        }
+    }
+
+    public static void download(Context context, Pin pin, String board_name, DownloadDao downloadDao){
+        if(FileSystem.Exists(pin.local_path)){
+            Toast.makeText(context, "already downloaded", Toast.LENGTH_SHORT).show();
+        }else{
+            String link = pin.getImage_url();
+            String path = FileSystem.getPinPath(board_name,link);
+            downloadDao.insertOne(new Download(path,link,pin.id));
+            G.sendDownloadBroadcast(context);
         }
     }
 }
