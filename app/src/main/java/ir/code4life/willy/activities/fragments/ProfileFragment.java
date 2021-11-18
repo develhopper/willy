@@ -2,13 +2,19 @@ package ir.code4life.willy.activities.fragments;
 
 import android.os.Bundle;
 
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import ir.code4life.willy.R;
+import ir.code4life.willy.util.SecurePreference;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -39,6 +45,19 @@ public class ProfileFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_profile, container, false);
+
+        View view = inflater.inflate(R.layout.fragment_profile, container, false);
+
+        SecurePreference preference = new SecurePreference(requireContext(),"SharedPref");
+
+        ImageView profile = view.findViewById(R.id.profile_image);
+        TextView username = view.findViewById(R.id.username);
+
+        username.setText(preference.getString("username",false));
+        Picasso.get().load(preference.getString("avatar",false)).into(profile);
+
+        profile.setBackground(AppCompatResources.getDrawable(requireContext(), R.drawable.profile_circle));
+        profile.setClipToOutline(true);
+        return view;
     }
 }

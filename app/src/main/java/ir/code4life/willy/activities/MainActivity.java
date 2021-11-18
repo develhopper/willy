@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
             if(item.getItemId() == R.id.nav_boards)
                 selectedFragment = BoardsFragment.newInstance();
             if(item.getItemId() == R.id.nav_profile)
-                selectedFragment = new ProfileFragment();
+                selectedFragment = ProfileFragment.newInstance();
             if(item.getItemId() == R.id.downloads)
                 selectedFragment = DownloadsFragment.newInstance();
 

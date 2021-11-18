@@ -11,6 +11,7 @@
         <entry key="app/src/main/res/drawable/navigation_selector.xml" value="0.17777777777777778" />
         <entry key="app/src/main/res/drawable/pinterest_login.xml" value="0.22" />
         <entry key="app/src/main/res/drawable/profile.xml" value="0.1675925925925926" />
+        <entry key="app/src/main/res/drawable/profile_circle.xml" value="0.22135416666666666" />
         <entry key="app/src/main/res/drawable/refresh.xml" value="0.10208333333333333" />
         <entry key="app/src/main/res/drawable/settings.xml" value="0.16296296296296298" />
         <entry key="app/src/main/res/font-v26/fontfamily.xml" value="0.23541666666666666" />
@@ -25,7 +26,7 @@
         <entry key="app/src/main/res/layout/fragment_downloads.xml" value="0.20520833333333333" />
         <entry key="app/src/main/res/layout/fragment_pin_pager.xml" value="0.20520833333333333" />
         <entry key="app/src/main/res/layout/fragment_pins.xml" value="0.20520833333333333" />
-        <entry key="app/src/main/res/layout/fragment_profile.xml" value="0.20520833333333333" />
+        <entry key="app/src/main/res/layout/fragment_profile.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_settings.xml" value="0.20520833333333333" />
         <entry key="app/src/main/res/layout/login_btn.xml" value="0.33" />
         <entry key="app/src/main/res/layout/login_button.xml" value="0.5" />
