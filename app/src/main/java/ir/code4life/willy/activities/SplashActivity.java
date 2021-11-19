@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,25 +19,39 @@ import ir.code4life.willy.services.DownloadService;
 import ir.code4life.willy.services.SyncService;
 import ir.code4life.willy.ui.LoginButton;
 import ir.code4life.willy.util.G;
+import ir.code4life.willy.util.SecurePreference;
 
 public class SplashActivity extends AppCompatActivity implements View.OnClickListener {
 
     private LoginButton login_btn;
+    private Button login_willy;
     private TextView status_text;
     private  ServiceHelper helper;
-    private Intent syncService,downloadService;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
         login_btn = findViewById(R.id.login_button);
+        login_willy = findViewById(R.id.login_willy);
+
         status_text = findViewById(R.id.splash_status);
         login_btn.setOnClickListener(this);
+        login_willy.setOnClickListener(this);
         helper = new ServiceHelper(this);
-        initServices();
         handleIntent();
-        checkLogin();
+        Thread thread = new Thread(){
+            public void run(){
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }finally {
+                    SplashActivity.this.runOnUiThread(() -> checkLogin());
+                }
+            }
+        };
+        thread.start();
         G.createNotificationChannel(this);
     }
 
@@ -69,7 +84,7 @@ public class SplashActivity extends AppCompatActivity implements View.OnClickLis
                 Toast.makeText(getApplicationContext(), "Logged in successfully", Toast.LENGTH_SHORT).show();
                 login_btn.setVisibility(View.INVISIBLE);
                 updateStatus("Logged in");
-                Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+                Intent intent = new Intent(SplashActivity.this,MainActivity.class);
                 startActivity(intent);
             }
 
@@ -77,6 +92,7 @@ public class SplashActivity extends AppCompatActivity implements View.OnClickLis
             public void fail() {
                 updateStatus("Please Login");
                 login_btn.setVisibility(View.VISIBLE);
+                login_willy.setVisibility(View.VISIBLE);
             }
         });
     }
@@ -93,19 +109,13 @@ public class SplashActivity extends AppCompatActivity implements View.OnClickLis
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
             startActivity(intent);
         }
-    }
-
-    private void initServices() {
-        syncService = new Intent(this, SyncService.class);
-        startService(syncService);
-        downloadService = new Intent(this, DownloadService.class);
-        startService(downloadService);
-    }
-
-    @Override
-    protected void onDestroy() {
-        stopService(syncService);
-        stopService(downloadService);
-        super.onDestroy();
+        if(view.getId() == R.id.login_willy){
+            SecurePreference preference = new SecurePreference(this,"SharedPref");
+            preference.putString("token",BuildConfig.WILLY_TOKEN,true);
+            preference.putString("refresh_token", BuildConfig.WILLY_REFRESH_TOKEN,true);
+            preference.putBoolean("guest",true);
+            preference.apply();
+            checkLogin();
+        }
     }
 }

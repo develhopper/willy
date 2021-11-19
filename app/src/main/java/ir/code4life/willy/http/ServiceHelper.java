@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 
 import com.google.gson.JsonObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -121,6 +122,27 @@ public class ServiceHelper {
 
             @Override
             public void onFailure(@NonNull Call<DataResponse<Board>> call, @NonNull Throwable t) {
+
+            }
+        });
+    }
+
+    public void getBoard(Long board_id,DataListener<Board> listener){
+        String token = "Bearer "+securePreference.getString("token",true);
+        Call<Board> call = service.getBoard(token,board_id);
+
+        call.enqueue(new Callback<Board>() {
+            @Override
+            public void onResponse(Call<Board> call, Response<Board> response) {
+                if(response.code() == 200 && response.body() != null){
+                    List<Board> boards = new ArrayList<>();
+                    boards.add(response.body());
+                    listener.success(boards);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Board> call, Throwable t) {
 
             }
         });

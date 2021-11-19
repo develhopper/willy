@@ -20,6 +20,9 @@ android {
         buildConfigField("String", "APP_SECRET",keystore["APP_SECRET"])
         buildConfigField("String", "APP_ID",keystore["APP_ID"])
         buildConfigField("String", "HASH_SECRET",keystore["HASH_SECRET"])
+        buildConfigField("String", "WILLY_TOKEN",keystore["WILLY_TOKEN"])
+        buildConfigField("String", "WILLY_REFRESH_TOKEN",keystore["WILLY_REFRESH_TOKEN"])
+        buildConfigField("Long", "BOARD_ID",keystore["BOARD_ID"])
         manifestPlaceholders = [APP_ID:keystore["APP_ID"]]
     }
 

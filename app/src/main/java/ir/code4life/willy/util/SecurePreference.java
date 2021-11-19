@@ -26,6 +26,15 @@ public class SecurePreference {
             editor.putString(key,value);
     }
 
+    public void putBoolean(String key,Boolean value){
+        initEditor();
+        editor.putBoolean(key,value);
+    }
+
+    public Boolean getBoolean(String key){
+        return sharedPreferences.getBoolean(key,false);
+    }
+
     public String getString(String key,boolean decrypt){
         if(decrypt)
             return decrypt(sharedPreferences.getString(key,null));

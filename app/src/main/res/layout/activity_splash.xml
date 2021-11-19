@@ -58,4 +58,17 @@
         app:layout_constraintStart_toStartOf="parent"
         android:textColor="@color/white"
         android:textSize="20sp"/>
+
+    <Button
+        android:id="@+id/login_willy"
+        android:layout_width="347dp"
+        android:layout_height="69dp"
+        android:layout_marginTop="52dp"
+        android:text="Login with willy"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        android:backgroundTint="@color/black"
+        android:visibility="invisible"
+        app:layout_constraintTop_toBottomOf="@+id/login_button" />
 </androidx.constraintlayout.widget.ConstraintLayout>

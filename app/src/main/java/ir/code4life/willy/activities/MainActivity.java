@@ -24,13 +24,22 @@ import ir.code4life.willy.util.G;
 public class MainActivity extends AppCompatActivity {
 
     private Fragment selectedFragment;
+    private Intent syncService,downloadService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         G.checkStoragePermission(this);
+        initServices();
         initViews();
+    }
+
+    private void initServices() {
+        syncService = new Intent(this, SyncService.class);
+        startService(syncService);
+        downloadService = new Intent(this, DownloadService.class);
+        startService(downloadService);
     }
 
 
@@ -85,5 +94,12 @@ public class MainActivity extends AppCompatActivity {
             AlertDialog alert = builder.create();
             alert.show();
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        stopService(syncService);
+        stopService(downloadService);
+        super.onDestroy();
     }
 }
