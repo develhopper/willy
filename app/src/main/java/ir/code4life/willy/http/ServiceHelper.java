@@ -75,6 +75,11 @@ public class ServiceHelper {
             return;
         }
 
+        if(securePreference.getString("username",false)!=null){
+            listener.success(null);
+            return;
+        }
+
         Call<JsonObject> call = service.user_account("Bearer "+token);
 
         call.enqueue(new Callback<JsonObject>() {

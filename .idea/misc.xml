@@ -32,6 +32,7 @@
         <entry key="app/src/main/res/layout/login_button.xml" value="0.5" />
         <entry key="app/src/main/res/layout/pager_item.xml" value="0.33" />
         <entry key="app/src/main/res/layout/pin_item.xml" value="0.25" />
+        <entry key="app/src/main/res/menu/board_menu.xml" value="0.20520833333333333" />
         <entry key="app/src/main/res/menu/bottom_navigation_menu.xml" value="0.25" />
         <entry key="app/src/main/res/menu/context_menu.xml" value="0.20520833333333333" />
         <entry key="app/src/main/res/menu/download_menu.xml" value="0.20520833333333333" />

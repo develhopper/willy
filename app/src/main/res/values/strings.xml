@@ -16,4 +16,6 @@
     <string name="delete_all">Clear All</string>
     <string name="channel_name">Willy</string>
     <string name="channel_description">Willy notification</string>
+    <string name="logout">logout</string>
+    <string name="about">About</string>
 </resources>

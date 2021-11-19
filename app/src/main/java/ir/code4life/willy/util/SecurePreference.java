@@ -32,6 +32,11 @@ public class SecurePreference {
         return sharedPreferences.getString(key,null);
     }
 
+    public void remove(String key){
+        initEditor();
+        editor.remove(key);
+    }
+
     private void initEditor() {
         if(editor==null)
             editor = sharedPreferences.edit();

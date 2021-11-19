@@ -42,7 +42,7 @@ public class SplashActivity extends AppCompatActivity implements View.OnClickLis
 
     private void handleIntent() {
         Intent intent = getIntent();
-        if(intent.getAction().equals(Intent.ACTION_VIEW)){
+        if(intent.getAction() != null && intent.getAction().equals(Intent.ACTION_VIEW)){
             Uri uri = Uri.parse(intent.getDataString());
             String code = uri.getQueryParameter("code");
 

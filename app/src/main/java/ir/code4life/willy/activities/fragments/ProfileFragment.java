@@ -1,5 +1,8 @@
 package ir.code4life.willy.activities.fragments;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.content.res.AppCompatResources;
@@ -8,12 +11,15 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
 import ir.code4life.willy.R;
+import ir.code4life.willy.activities.MainActivity;
+import ir.code4life.willy.activities.SplashActivity;
 import ir.code4life.willy.util.SecurePreference;
 
 /**
@@ -52,6 +58,22 @@ public class ProfileFragment extends Fragment {
 
         ImageView profile = view.findViewById(R.id.profile_image);
         TextView username = view.findViewById(R.id.username);
+        Button logout = view.findViewById(R.id.logout_btn);
+
+        logout.setOnClickListener(view1 -> {
+            AlertDialog.Builder dialog = new AlertDialog.Builder(requireContext());
+
+            dialog.setTitle("Logout?");
+            dialog.setMessage("Are you sure you want to logout?");
+            dialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    logout(preference);
+                }
+            });
+            dialog.setNegativeButton("Cancel",null);
+            dialog.show();
+        });
 
         username.setText(preference.getString("username",false));
         Picasso.get().load(preference.getString("avatar",false)).into(profile);
@@ -59,5 +81,17 @@ public class ProfileFragment extends Fragment {
         profile.setBackground(AppCompatResources.getDrawable(requireContext(), R.drawable.profile_circle));
         profile.setClipToOutline(true);
         return view;
+    }
+
+    private void logout(SecurePreference preference){
+        preference.remove("token");
+        preference.remove("refresh_token");
+        preference.remove("username");
+        preference.remove("avatar");
+        preference.apply();
+        Intent intent = new Intent(requireContext(), SplashActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+        startActivity(intent);
+        requireActivity().finish();
     }
 }

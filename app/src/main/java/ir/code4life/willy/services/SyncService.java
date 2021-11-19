@@ -20,7 +20,6 @@ import ir.code4life.willy.database.dao.PinDao;
 import ir.code4life.willy.http.ServiceHelper;
 import ir.code4life.willy.http.models.Board;
 import ir.code4life.willy.http.models.Pin;
-import ir.code4life.willy.util.G;
 
 public class SyncService extends Service {
     public static String SYNC_ALL = "pinterest_sync_all";

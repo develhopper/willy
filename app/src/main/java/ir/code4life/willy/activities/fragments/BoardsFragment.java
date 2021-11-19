@@ -78,8 +78,8 @@ public class BoardsFragment extends Fragment {
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
+    public void onDestroy() {
+        super.onDestroy();
         requireContext().unregisterReceiver(receiver);
     }
 
