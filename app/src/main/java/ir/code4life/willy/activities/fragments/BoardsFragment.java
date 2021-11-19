@@ -25,6 +25,7 @@ import ir.code4life.willy.adapters.BoardRecyclerAdapter;
 import ir.code4life.willy.database.AppDatabase;
 import ir.code4life.willy.database.dao.BoardDao;
 import ir.code4life.willy.database.models.BoardWithPins;
+import ir.code4life.willy.services.DownloadService;
 import ir.code4life.willy.services.SyncService;
 
 public class BoardsFragment extends Fragment {
@@ -68,11 +69,14 @@ public class BoardsFragment extends Fragment {
                 if(intent.getAction().equals(SyncService.SYNCED)){
                     refreshList();
                 }
+                if(intent.getAction().equals(SyncService.SERVICE_STARTED)){
+                    refreshList();
+                }
             }
         };
         IntentFilter filter = new IntentFilter(SyncService.SYNCED);
+        filter.addAction(SyncService.SERVICE_STARTED);
         requireContext().registerReceiver(receiver,filter);
-        refreshList();
 
         return view;
     }

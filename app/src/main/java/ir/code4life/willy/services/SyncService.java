@@ -28,6 +28,7 @@ public class SyncService extends Service {
     public static String SYNC_ALL = "pinterest_sync_all";
     public static String SYNC_BOARD = "pinterest_sync_board";
     public static String SYNCED = "pinterest_synced";
+    public static String SERVICE_STARTED = "service_started";
 
     private ServiceHelper helper;
     private BoardDao boardDao;
@@ -60,15 +61,14 @@ public class SyncService extends Service {
                     sync_all();
                     pending = true;
                 }
-                if(intent.getAction().equals(DownloadService.STOP_SERVICE)){
-                    stopSelf();
-                }
             }
         };
         IntentFilter filter = new IntentFilter();
         filter.addAction(SYNC_ALL);
         filter.addAction(SYNC_BOARD);
         registerReceiver(receiver, filter);
+        Intent intent = new Intent(SERVICE_STARTED);
+        sendBroadcast(intent);
     }
 
     @Override
