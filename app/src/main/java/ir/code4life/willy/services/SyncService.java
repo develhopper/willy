@@ -56,10 +56,12 @@ public class SyncService extends Service {
             @Override
             public void onReceive(Context context, Intent intent) {
                 String action = intent.getAction();
-                G.log("Syncing: "+pending);
                 if (SYNC_ALL.equals(action)) {
                     sync_all();
                     pending = true;
+                }
+                if(intent.getAction().equals(DownloadService.STOP_SERVICE)){
+                    stopSelf();
                 }
             }
         };

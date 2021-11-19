@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Willy</string>
+    <string name="login_with_pinterest">ورود با پینترست</string>
+    <string name="profile">پروفایل</string>
+    <string name="boards">مجموعه</string>
+    <string name="settings">تنظیمات</string>
+    <string name="refresh">بروزرسانی</string>
+    <string name="download_all">دانلود همه</string>
+    <string name="downloads">دانلود</string>
+    <string name="status">در حال بارگذاری</string>
+    <string name="download">دانلود</string>
+    <string name="set_as_wallpaper">تنظیم به عنوان پس زمینه</string>
+    <string name="delete_completed">حذف دانلود های تکمیل شده</string>
+    <string name="delete_all">حذف همه</string>
+    <string name="logout">خروج</string>
+    <string name="about">درباره</string>
+    <string name="resume">ادامه دانلود</string>
+    <string name="login_with_willy">ورود بدون حساب</string>
+    <string name="total">مجموع</string>
+    <string name="completed">تکمیل شده</string>
+    <string name="pending">در حال دانلود</string>
+</resources>

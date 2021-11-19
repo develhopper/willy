@@ -31,15 +31,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         G.checkStoragePermission(this);
-        initServices();
         initViews();
-    }
-
-    private void initServices() {
-        syncService = new Intent(this, SyncService.class);
-        startService(syncService);
-        downloadService = new Intent(this, DownloadService.class);
-        startService(downloadService);
     }
 
 
@@ -98,8 +90,8 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        stopService(syncService);
-        stopService(downloadService);
+        Intent intent = new Intent(DownloadService.STOP_SERVICE);
+        sendBroadcast(intent);
         super.onDestroy();
     }
 }

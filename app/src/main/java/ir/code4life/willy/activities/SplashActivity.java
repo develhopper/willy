@@ -27,6 +27,8 @@ public class SplashActivity extends AppCompatActivity implements View.OnClickLis
     private Button login_willy;
     private TextView status_text;
     private  ServiceHelper helper;
+    private Intent syncService,downloadService;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +41,7 @@ public class SplashActivity extends AppCompatActivity implements View.OnClickLis
         login_btn.setOnClickListener(this);
         login_willy.setOnClickListener(this);
         helper = new ServiceHelper(this);
+        initServices();
         handleIntent();
         Thread thread = new Thread(){
             public void run(){
@@ -53,6 +56,13 @@ public class SplashActivity extends AppCompatActivity implements View.OnClickLis
         };
         thread.start();
         G.createNotificationChannel(this);
+    }
+
+    private void initServices() {
+        syncService = new Intent(this, SyncService.class);
+        startService(syncService);
+        downloadService = new Intent(this, DownloadService.class);
+        startService(downloadService);
     }
 
     private void handleIntent() {

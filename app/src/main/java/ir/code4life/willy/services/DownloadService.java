@@ -24,6 +24,7 @@ import ir.code4life.willy.util.Downloader;
 
 public class DownloadService extends Service {
     public static String START_DOWNLOAD = "start download";
+    public static String STOP_SERVICE = "stop_service";
     public static boolean DEBUG = false;
     public static Integer NOTIFICATION_ID = 0;
     private DownloadDao downloadDao;
@@ -62,6 +63,9 @@ public class DownloadService extends Service {
             public void onReceive(Context context, Intent intent) {
                 if(intent.getAction().equals(START_DOWNLOAD)){
                     download();
+                }
+                if(intent.getAction().equals(STOP_SERVICE)){
+                    stopSelf();
                 }
             }
         };
