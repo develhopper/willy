@@ -14,6 +14,8 @@ import java.util.Map;
 import ir.code4life.willy.BuildConfig;
 import ir.code4life.willy.R;
 import ir.code4life.willy.http.ServiceHelper;
+import ir.code4life.willy.services.DownloadService;
+import ir.code4life.willy.services.SyncService;
 import ir.code4life.willy.ui.LoginButton;
 import ir.code4life.willy.util.G;
 
@@ -22,7 +24,7 @@ public class SplashActivity extends AppCompatActivity implements View.OnClickLis
     private LoginButton login_btn;
     private TextView status_text;
     private  ServiceHelper helper;
-
+    private Intent syncService,downloadService;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,6 +34,7 @@ public class SplashActivity extends AppCompatActivity implements View.OnClickLis
         status_text = findViewById(R.id.splash_status);
         login_btn.setOnClickListener(this);
         helper = new ServiceHelper(this);
+        initServices();
         handleIntent();
         checkLogin();
         G.createNotificationChannel(this);
@@ -90,5 +93,19 @@ public class SplashActivity extends AppCompatActivity implements View.OnClickLis
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
             startActivity(intent);
         }
+    }
+
+    private void initServices() {
+        syncService = new Intent(this, SyncService.class);
+        startService(syncService);
+        downloadService = new Intent(this, DownloadService.class);
+        startService(downloadService);
+    }
+
+    @Override
+    protected void onDestroy() {
+        stopService(syncService);
+        stopService(downloadService);
+        super.onDestroy();
     }
 }

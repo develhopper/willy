@@ -20,11 +20,12 @@ import ir.code4life.willy.database.dao.PinDao;
 import ir.code4life.willy.http.ServiceHelper;
 import ir.code4life.willy.http.models.Board;
 import ir.code4life.willy.http.models.Pin;
+import ir.code4life.willy.util.G;
 
 public class SyncService extends Service {
-    public static String SYNC_ALL="pinterest_sync_all";
-    public static String SYNC_BOARD="pinterest_sync_board";
-    public static String SYNCED="pinterest_synced";
+    public static String SYNC_ALL = "pinterest_sync_all";
+    public static String SYNC_BOARD = "pinterest_sync_board";
+    public static String SYNCED = "pinterest_synced";
 
     private ServiceHelper helper;
     private BoardDao boardDao;
@@ -42,7 +43,7 @@ public class SyncService extends Service {
     public void onCreate() {
         super.onCreate();
 
-        helper= new ServiceHelper(getApplicationContext());
+        helper = new ServiceHelper(getApplicationContext());
         AppDatabase database = AppDatabase.getInstance(getApplicationContext());
         boardDao = database.boardDao();
         pinDao = database.pinDao();
@@ -60,7 +61,7 @@ public class SyncService extends Service {
         IntentFilter filter = new IntentFilter();
         filter.addAction(SYNC_ALL);
         filter.addAction(SYNC_BOARD);
-        registerReceiver(receiver,filter);
+        registerReceiver(receiver, filter);
     }
 
     @Override
@@ -70,43 +71,44 @@ public class SyncService extends Service {
     }
 
 
-    public void sync_all(){
-        if(pending){
+    public void sync_all() {
+        if (pending) {
             Toast.makeText(getApplicationContext(), "Sync pending", Toast.LENGTH_SHORT).show();
             return;
         }
-        helper.getBoards(null,boards -> {
+        helper.getBoards(null, boards -> {
             boardDao.insertAll(boards);
             List<Long> ids = new ArrayList<>();
-            Iterator<Board> iterator = boards.iterator();
-            while (iterator.hasNext()){
-                Board board = iterator.next();
+            for (Board board : boards) {
                 ids.add(board.id);
                 board.create_syncId();
                 helper.getBoardPreviews(board.id, list -> pinDao.insertAll(list));
-                if(!iterator.hasNext()){
-                    Intent broadcast = new Intent(SYNCED);
-                    sendBroadcast(broadcast);
-                    sync_boards(boards);
-                }
             }
+            sync_boards(boards);
             boardDao.sync_deleted_boards(ids);
         });
     }
 
-    public void sync_boards(List<Board> boards){
-        for(Board board: boards){
+    public void sync_boards(List<Board> boards) {
+        Iterator<Board> iterator = boards.iterator();
+        while (iterator.hasNext()) {
+            Board board = iterator.next();
             helper.getPins(null, board.id, list -> {
                 List<Long> ids = new ArrayList<>();
                 Long sync_id = board.getSync_id();
 
-                for(Pin pin : list){
+                for (Pin pin : list) {
                     ids.add(pin.id);
                 }
                 pinDao.insertAll(list);
 
-                pinDao.set_sync_id(ids,sync_id);
-                pinDao.sync_removed_items(board.id,sync_id);
+                pinDao.set_sync_id(ids, sync_id);
+                pinDao.sync_removed_items(board.id, sync_id);
+
+                if (!iterator.hasNext()) {
+                    Intent broadcast = new Intent(SYNCED);
+                    sendBroadcast(broadcast);
+                }
             });
         }
         pending = false;

@@ -25,11 +25,14 @@ import ir.code4life.willy.database.AppDatabase;
 import ir.code4life.willy.database.dao.BoardDao;
 import ir.code4life.willy.database.models.BoardWithPins;
 import ir.code4life.willy.services.SyncService;
+import ir.code4life.willy.util.G;
 
 public class BoardsFragment extends Fragment {
 
     private BoardRecyclerAdapter adapter;
     private BoardDao boardDao;
+    private BroadcastReceiver receiver;
+    private AppDatabase database;
 
     public BoardsFragment() { }
 
@@ -48,7 +51,7 @@ public class BoardsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_boards, container, false);
         setHasOptionsMenu(true);
 
-        AppDatabase database = AppDatabase.getInstance(getContext());
+        database = AppDatabase.getInstance(getContext());
         boardDao = database.boardDao();
 
         RecyclerView recyclerView = view.findViewById(R.id.boards_recycler);
@@ -58,9 +61,8 @@ public class BoardsFragment extends Fragment {
         adapter = new BoardRecyclerAdapter(getActivity());
         
         recyclerView.setAdapter(adapter);
-        
-        refreshList();
-        BroadcastReceiver receiver = new BroadcastReceiver() {
+
+        receiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 if(intent.getAction().equals(SyncService.SYNCED)){
@@ -70,17 +72,24 @@ public class BoardsFragment extends Fragment {
         };
         IntentFilter filter = new IntentFilter(SyncService.SYNCED);
         requireContext().registerReceiver(receiver,filter);
+        refreshList();
+
         return view;
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        requireContext().unregisterReceiver(receiver);
+    }
+
     public void refreshList() {
-        List<BoardWithPins> boards = boardDao.getAllWithCount();
+        List<BoardWithPins> boards = database.boardDao().getAllWithCount();
+        adapter.updateList(boards);
         if(boards.isEmpty()){
-            Intent intent = new Intent();
-            intent.setAction(SyncService.SYNC_ALL);
+            Intent intent = new Intent(SyncService.SYNC_ALL);
             requireContext().sendBroadcast(intent);
         }
-        adapter.updateList(boards);
     }
 
     @Override

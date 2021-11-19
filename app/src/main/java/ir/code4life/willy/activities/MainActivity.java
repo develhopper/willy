@@ -23,7 +23,6 @@ import ir.code4life.willy.util.G;
 public class MainActivity extends AppCompatActivity {
 
     private Fragment selectedFragment;
-    private Intent syncService,downloadService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,26 +30,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         G.checkStoragePermission(this);
         initViews();
-        initServices();
     }
 
-    @Override
-    protected void onDestroy() {
-        stopService(syncService);
-        stopService(downloadService);
-        super.onDestroy();
-    }
-
-    private void initServices() {
-        syncService = new Intent(this, SyncService.class);
-        startService(syncService);
-        downloadService = new Intent(this, DownloadService.class);
-        startService(downloadService);
-    }
 
     private void initViews() {
         selectedFragment = BoardsFragment.newInstance();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.addToBackStack(null);
         transaction.replace(R.id.main_fragment, selectedFragment);
         transaction.commit();
 
