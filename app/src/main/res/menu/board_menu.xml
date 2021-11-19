@@ -6,6 +6,6 @@
         android:title="@string/refresh"
         app:showAsAction="always"
         android:icon="@drawable/refresh" />
-    <item android:id="@+id/nab_about"
+    <item android:id="@+id/nav_about"
         android:title="@string/about"/>
 </menu>

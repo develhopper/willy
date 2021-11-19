@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -25,7 +26,6 @@ import ir.code4life.willy.database.AppDatabase;
 import ir.code4life.willy.database.dao.BoardDao;
 import ir.code4life.willy.database.models.BoardWithPins;
 import ir.code4life.willy.services.SyncService;
-import ir.code4life.willy.util.G;
 
 public class BoardsFragment extends Fragment {
 
@@ -104,6 +104,12 @@ public class BoardsFragment extends Fragment {
                 Intent intent = new Intent();
                 intent.setAction(SyncService.SYNC_ALL);
                 requireContext().sendBroadcast(intent);
+        }
+        if(item.getItemId() == R.id.nav_about){
+            FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
+            transaction.addToBackStack(null);
+            transaction.replace(R.id.main_fragment,new AboutFragment());
+            transaction.commit();
         }
         return super.onOptionsItemSelected(item);
     }

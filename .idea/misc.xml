@@ -22,6 +22,7 @@
         <entry key="app/src/main/res/layout/board_item.xml" value="0.25" />
         <entry key="app/src/main/res/layout/custom_login_button.xml" value="0.20520833333333333" />
         <entry key="app/src/main/res/layout/download_item.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/fragment_about.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_boards.xml" value="0.20520833333333333" />
         <entry key="app/src/main/res/layout/fragment_downloads.xml" value="0.20520833333333333" />
         <entry key="app/src/main/res/layout/fragment_pin_pager.xml" value="0.20520833333333333" />
