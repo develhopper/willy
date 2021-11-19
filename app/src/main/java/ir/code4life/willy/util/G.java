@@ -6,9 +6,11 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
+import android.text.TextUtils;
 import android.util.Log;
 import android.webkit.URLUtil;
 import android.widget.Toast;
@@ -18,6 +20,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
 
 import java.io.File;
+import java.util.Locale;
 
 import ir.code4life.willy.BuildConfig;
 import ir.code4life.willy.R;
@@ -96,5 +99,15 @@ public class G {
             downloadDao.insertOne(new Download(path,link,pin.id));
             G.sendDownloadBroadcast(context);
         }
+    }
+
+    public static void setLanguage(Context context, String lang){
+        Configuration cfg = new Configuration();
+        if (!TextUtils.isEmpty(lang))
+            cfg.locale = new Locale(lang);
+        else
+            cfg.locale = Locale.getDefault();
+
+        context.getResources().updateConfiguration(cfg, null);
     }
 }
