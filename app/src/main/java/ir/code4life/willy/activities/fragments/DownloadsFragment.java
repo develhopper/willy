@@ -24,6 +24,7 @@ import ir.code4life.willy.adapters.DownloadRecyclerAdapter;
 import ir.code4life.willy.database.AppDatabase;
 import ir.code4life.willy.database.dao.DownloadDao;
 import ir.code4life.willy.database.models.Download;
+import ir.code4life.willy.util.G;
 
 
 public class DownloadsFragment extends Fragment {
@@ -112,6 +113,8 @@ public class DownloadsFragment extends Fragment {
             downloadDao.clearCompleted();
             adapter.setList(downloadDao.AllDownloads(0));
             Toast.makeText(getContext(), "Deleted", Toast.LENGTH_SHORT).show();
+        }else if(item.getItemId() == R.id.resume){
+            G.sendDownloadBroadcast(requireContext());
         }
         return super.onOptionsItemSelected(item);
     }

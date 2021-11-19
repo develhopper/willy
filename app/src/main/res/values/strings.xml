@@ -18,4 +18,5 @@
     <string name="channel_description">Willy notification</string>
     <string name="logout">logout</string>
     <string name="about">About</string>
+    <string name="resume">Resume</string>
 </resources>
