@@ -80,8 +80,7 @@ public class SecurePreference {
             cipher.init(Cipher.DECRYPT_MODE, secret);
             byte [] encrypted = Base64.decode(value,Base64.DEFAULT);
             return new String(cipher.doFinal(encrypted));
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception ignore) {
         }
         return  null;
     }

@@ -27,6 +27,7 @@ import ir.code4life.willy.database.dao.BoardDao;
 import ir.code4life.willy.database.models.BoardWithPins;
 import ir.code4life.willy.services.DownloadService;
 import ir.code4life.willy.services.SyncService;
+import ir.code4life.willy.util.G;
 
 public class BoardsFragment extends Fragment {
 
@@ -70,6 +71,7 @@ public class BoardsFragment extends Fragment {
                     refreshList();
                 }
                 if(intent.getAction().equals(SyncService.SERVICE_STARTED)){
+                    G.log("Service started");
                     refreshList();
                 }
             }
