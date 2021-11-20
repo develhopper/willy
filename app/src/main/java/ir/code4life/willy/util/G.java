@@ -21,6 +21,7 @@ import androidx.core.content.FileProvider;
 
 import java.io.File;
 import java.util.Locale;
+import java.util.UUID;
 
 import ir.code4life.willy.BuildConfig;
 import ir.code4life.willy.R;
@@ -44,6 +45,9 @@ public class G {
     public static void checkStoragePermission(Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             Environment.isExternalStorageManager();
+            ActivityCompat.requestPermissions((AppCompatActivity) context,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE},
+                    5000);
             return;
         }
         if (context.checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
@@ -56,6 +60,10 @@ public class G {
 
     public static String getFileNameFromUrl(String url) {
         return URLUtil.guessFileName(url, null, null);
+    }
+
+    public static String randomString(){
+        return UUID.randomUUID().toString();
     }
 
     public static void sendDownloadBroadcast(Context context) {

@@ -24,6 +24,7 @@ import ir.code4life.willy.adapters.DownloadRecyclerAdapter;
 import ir.code4life.willy.database.AppDatabase;
 import ir.code4life.willy.database.dao.DownloadDao;
 import ir.code4life.willy.database.models.Download;
+import ir.code4life.willy.database.models.DownloadInfo;
 import ir.code4life.willy.util.G;
 
 
@@ -68,7 +69,7 @@ public class DownloadsFragment extends Fragment {
     private void setupRecycler(View view) {
         RecyclerView recyclerView = view.findViewById(R.id.downloads_recycler);
         List<Download> list = downloadDao.AllDownloads(0);
-        Download extra = downloadDao.downloadExtra();
+        DownloadInfo extra = downloadDao.downloadExtra();
 
         total_txt.setText("Total:  "+extra.total);
         completed_txt.setText("Completed: "+extra.completed);

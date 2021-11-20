@@ -9,6 +9,7 @@ import androidx.room.Update;
 import java.util.List;
 
 import ir.code4life.willy.database.models.Download;
+import ir.code4life.willy.database.models.DownloadInfo;
 
 @Dao
 public interface DownloadDao {
@@ -16,10 +17,10 @@ public interface DownloadDao {
     @Query("SELECT * FROM Download LIMIT 50 OFFSET :offset")
     List<Download> AllDownloads(Integer offset);
 
-    @Query("SELECT Download.id,Download.status,count(*) as total , (SELECT count(*) FROM Download WHERE status=1) as completed FROM Download LIMIT 1")
-    Download downloadExtra();
+    @Query("SELECT Download.status,count(status) as total , (SELECT count(status) FROM Download WHERE status=1) as completed FROM Download LIMIT 1")
+    DownloadInfo downloadExtra();
 
-    @Query("SELECT * FROM Download WHERE status=0 LIMIT 10")
+    @Query("SELECT * FROM Download WHERE status=0")
     List<Download> getPendingDownloads();
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)

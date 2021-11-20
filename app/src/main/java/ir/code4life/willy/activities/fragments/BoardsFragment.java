@@ -23,16 +23,13 @@ import java.util.List;
 import ir.code4life.willy.R;
 import ir.code4life.willy.adapters.BoardRecyclerAdapter;
 import ir.code4life.willy.database.AppDatabase;
-import ir.code4life.willy.database.dao.BoardDao;
 import ir.code4life.willy.database.models.BoardWithPins;
-import ir.code4life.willy.services.DownloadService;
 import ir.code4life.willy.services.SyncService;
 import ir.code4life.willy.util.G;
 
 public class BoardsFragment extends Fragment {
 
     private BoardRecyclerAdapter adapter;
-    private BoardDao boardDao;
     private BroadcastReceiver receiver;
     private AppDatabase database;
 
@@ -54,7 +51,6 @@ public class BoardsFragment extends Fragment {
         setHasOptionsMenu(true);
 
         database = AppDatabase.getInstance(getContext());
-        boardDao = database.boardDao();
 
         RecyclerView recyclerView = view.findViewById(R.id.boards_recycler);
         
@@ -80,6 +76,7 @@ public class BoardsFragment extends Fragment {
         filter.addAction(SyncService.SERVICE_STARTED);
         requireContext().registerReceiver(receiver,filter);
 
+        refreshList();
         return view;
     }
 

@@ -18,6 +18,7 @@ import ir.code4life.willy.http.ServiceHelper;
 import ir.code4life.willy.services.DownloadService;
 import ir.code4life.willy.services.SyncService;
 import ir.code4life.willy.ui.LoginButton;
+import ir.code4life.willy.util.FileSystem;
 import ir.code4life.willy.util.G;
 import ir.code4life.willy.util.SecurePreference;
 
@@ -27,6 +28,7 @@ public class SplashActivity extends AppCompatActivity implements View.OnClickLis
     private Button login_willy;
     private TextView status_text;
     private  ServiceHelper helper;
+    SecurePreference preference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +42,12 @@ public class SplashActivity extends AppCompatActivity implements View.OnClickLis
         login_btn.setOnClickListener(this);
         login_willy.setOnClickListener(this);
         helper = new ServiceHelper(this);
+        preference = new SecurePreference(this,"SharedPref");
+        if(!preference.getBoolean("configured")){
+            FileSystem.removeDir(null);
+            preference.putBoolean("configured", true);
+            preference.apply();
+        }
         handleIntent();
         Thread thread = new Thread(){
             public void run(){
@@ -111,7 +119,6 @@ public class SplashActivity extends AppCompatActivity implements View.OnClickLis
             startActivity(intent);
         }
         if(view.getId() == R.id.login_willy){
-            SecurePreference preference = new SecurePreference(this,"SharedPref");
             preference.putString("token",BuildConfig.WILLY_TOKEN,true);
             preference.putString("refresh_token", BuildConfig.WILLY_REFRESH_TOKEN,true);
             preference.putBoolean("guest",true);

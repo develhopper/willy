@@ -124,13 +124,13 @@ public class PinsFragment extends Fragment {
                         String link = pin.getImage_url();
                         String path = FileSystem.getPinPath(board.name,link);
                         downloads.add(new Download(path, link, pin.id));
-                        downloadDao.insertAll(downloads);
                     }
                 }
                 page++;
                 pins.clear();
                 pins.addAll(pinDao.getAll(board_id,page*20));
             }
+            downloadDao.insertAll(downloads);
             G.sendDownloadBroadcast(requireContext());
         }
         return super.onOptionsItemSelected(item);

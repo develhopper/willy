@@ -4,12 +4,12 @@ import android.os.Environment;
 
 import java.io.File;
 
+import okio.BufferedSink;
 import okio.BufferedSource;
 import okio.Okio;
-import okio.Sink;
 
 public class FileSystem {
-    public static final String ROOT_DIR = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath()+"/Willy/";
+    public static final String ROOT_DIR = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString()+"/Willy/";
 
     public static Boolean mkdir(String name){
         String path = ROOT_DIR+name;
@@ -27,20 +27,46 @@ public class FileSystem {
         return null;
     }
 
-    public static void saveImage(BufferedSource source, String path){
+    public static Boolean saveImage(BufferedSource source, String path){
+        File file = new File(path);
         try {
-            File file = new File(path);
-            Sink sink = Okio.sink(file);
-            source.readAll(sink);
-            source.close();
+            BufferedSink sink = Okio.buffer(Okio.sink(file));
+            sink.writeAll(source);
             sink.close();
+            return true;
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
     }
 
     public static String getPinPath(String board_name,String pin_url) {
-        return getBoardDir(board_name)+G.getFileNameFromUrl(pin_url);
+        String ext = pin_url.substring(pin_url.lastIndexOf('.'));
+        return getBoardDir(board_name)+G.randomString()+ext;
+    }
+
+    public static void removeDir(String dir){
+        File parent;
+
+        if(dir == null)
+            parent = new File(ROOT_DIR);
+        else
+            parent = new File(dir);
+
+        if(parent.exists() && parent.isDirectory()){
+            String[] children = parent.list();
+            assert children != null;
+            for(String child: children){
+                G.log(parent.getAbsolutePath());
+                File f = new File(parent,child);
+                if(f.isDirectory())
+                    removeDir(f.getAbsolutePath());
+                else
+                    f.delete();
+            }
+        }
+
+        parent.delete();
     }
 
     public static Boolean Exists(String path){

@@ -15,9 +15,6 @@ public class Download {
     public boolean status=false;
     public Long pin_id;
 
-    public Integer total;
-    public Integer completed;
-
     @Ignore
     public Download(String path,String link,Long pin_id){
         this.path = path;

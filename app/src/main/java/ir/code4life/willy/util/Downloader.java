@@ -27,13 +27,11 @@ public class Downloader {
             Request request = new Request.Builder().url(download.link).build();
             Response response = client.newCall(request).execute();
             assert response.body() != null;
-            FileSystem.saveImage(response.body().source(),download.path);
-            response.close();
+            return FileSystem.saveImage(response.body().source(),download.path);
         }catch (Exception e){
             e.printStackTrace();
             return false;
         }
-        return true;
     }
 
 }
