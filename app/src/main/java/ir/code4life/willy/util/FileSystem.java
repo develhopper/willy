@@ -55,7 +55,8 @@ public class FileSystem {
 
         if(parent.exists() && parent.isDirectory()){
             String[] children = parent.list();
-            assert children != null;
+            if(children == null)
+                return;
             for(String child: children){
                 G.log(parent.getAbsolutePath());
                 File f = new File(parent,child);
