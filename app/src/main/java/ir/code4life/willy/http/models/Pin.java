@@ -7,6 +7,7 @@ import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
+import ir.code4life.willy.util.FileSystem;
 import ir.code4life.willy.util.Size;
 
 @Entity(foreignKeys = {
@@ -36,6 +37,9 @@ public class Pin {
     }
 
     public String getImage_url(Size size){
+        if(this.local_path != null && FileSystem.Exists(this.local_path)){
+            return "file://"+this.local_path;
+        }
         if(this.image_url!=null){
             String result = image_url.replace("/originals/","/"+size.name().substring(1)+"/");
             if(result.endsWith(".png") && size != Size._originals){

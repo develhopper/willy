@@ -20,12 +20,13 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="2">
+
             <ImageView
                 android:id="@+id/image_preview_1"
-                android:layout_marginEnd="1dp"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scaleType="centerCrop"/>
+                android:layout_height="150dp"
+                android:layout_marginEnd="1dp"
+                android:scaleType="centerCrop" />
         </LinearLayout>
         <LinearLayout
             android:layout_width="0dp"

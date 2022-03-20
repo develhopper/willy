@@ -86,7 +86,6 @@ public class DownloadService extends Service {
                 @Override
                 public void onComplete() {
                     pending = false;
-                    G.log("download completed");
                     builder.setContentTitle("Download completed");
                     builder.setSmallIcon(android.R.drawable.stat_sys_download_done);
                     manager.notify(NOTIFICATION_ID, builder.build());

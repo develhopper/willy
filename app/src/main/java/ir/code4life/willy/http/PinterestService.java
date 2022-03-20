@@ -21,6 +21,9 @@ public interface PinterestService {
     @POST("v5/oauth/token")
     @FormUrlEncoded
     Call<JsonObject> authenticate(@Header("Authorization") String authorization, @FieldMap() Map<String,String> fields);
+
+    @POST("v5/oauth/token")
+    @FormUrlEncoded
     Call<JsonObject> refreshToken(@Header("Authorization") String authorization, @FieldMap Map<String,String> fields);
 
     @GET("v5/user_account")

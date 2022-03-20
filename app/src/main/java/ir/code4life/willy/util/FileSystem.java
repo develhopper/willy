@@ -41,8 +41,8 @@ public class FileSystem {
     }
 
     public static String getPinPath(String board_name,String pin_url) {
-        String ext = pin_url.substring(pin_url.lastIndexOf('.'));
-        return getBoardDir(board_name)+G.randomString()+ext;
+        String name = pin_url.substring(pin_url.lastIndexOf('/') + 1);
+        return getBoardDir(board_name)+name;
     }
 
     public static void removeDir(String dir){
