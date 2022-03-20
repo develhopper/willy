@@ -21,6 +21,7 @@ public interface PinterestService {
     @POST("v5/oauth/token")
     @FormUrlEncoded
     Call<JsonObject> authenticate(@Header("Authorization") String authorization, @FieldMap() Map<String,String> fields);
+    Call<JsonObject> refreshToken(@Header("Authorization") String authorization, @FieldMap Map<String,String> fields);
 
     @GET("v5/user_account")
     Call<JsonObject> user_account(@Header("Authorization") String authorization);
@@ -29,7 +30,7 @@ public interface PinterestService {
     Call<DataResponse<Board>> boards(@Header("Authorization") String authorization, @Query("bookmark") String bookmark);
 
     @GET("v5/boards/{Id}")
-    Call<Board> getBoard(@Header("Authorization") String authorization,@Path("Id") Long board_id);
+    Call<Board> getBoard(@Header("Authorization") String authorization,@Path("Id") String board_id);
 
     @GET("v5/boards/{Id}/pins?page_size=3")
     Call<DataResponse<Pin>> previewPins(@Header("Authorization") String authorization, @Path("Id") String id);

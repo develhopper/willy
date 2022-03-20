@@ -69,15 +69,40 @@ public class ServiceHelper {
         });
     }
 
+    public void refreshToken(){
+        String authorization = Credentials.basic(BuildConfig.APP_ID,BuildConfig.APP_SECRET);
+        SecurePreference securePreference = new SecurePreference(context,"SharedPref");
+
+        Map<String, String> fields = new HashMap<>();
+
+        fields.put("refresh_token", securePreference.getString("refresh_token",true));
+        fields.put("grant_type","refresh_token");
+        fields.put("scope", "boards:read,pins:read,user_accounts:read");
+
+        Call<JsonObject> call = service.refreshToken(authorization,fields);
+
+        call.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                if(response.code() == 200){
+                    JsonObject json = response.body();
+                    if(json != null){
+                        securePreference.putString("token",json.get("access_token").getAsString(),true);
+                        securePreference.apply();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+
+            }
+        });
+    }
     public void profileInfo(ServiceListener listener){
         String token = securePreference.getString("token",true);
         if(token==null){
             listener.fail();
-            return;
-        }
-
-        if(securePreference.getString("username",false)!=null){
-            listener.success(null);
             return;
         }
 
@@ -94,6 +119,9 @@ public class ServiceHelper {
                         securePreference.apply();
                         listener.success(null);
                     }
+                }
+                if(response.code() == 401){
+                    new ServiceHelper(context).refreshToken();
                 }
             }
 
@@ -127,7 +155,7 @@ public class ServiceHelper {
         });
     }
 
-    public void getBoard(Long board_id,DataListener<Board> listener){
+    public void getBoard(String board_id,DataListener<Board> listener){
         String token = "Bearer "+securePreference.getString("token",true);
         Call<Board> call = service.getBoard(token,board_id);
 
@@ -182,6 +210,8 @@ public class ServiceHelper {
                     if(response.body().bookmark!=null){
                         getPins(response.body().bookmark,board_id,listener);
                     }
+                }else{
+                    listener.success(null);
                 }
             }
 

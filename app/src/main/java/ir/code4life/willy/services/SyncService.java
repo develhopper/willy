@@ -99,10 +99,14 @@ public class SyncService extends Service {
             Board board = iterator.next();
             board_ids.add(board.id);
             board.create_syncId();
+            Long sync_id = board.getSync_id();
 
             helper.getPins(null, board.id, list -> {
+                if(list == null){
+                    pinDao.sync_removed_items(board.id, sync_id);
+                    return;
+                }
                 List<Long> pin_ids = new ArrayList<>();
-                Long sync_id = board.getSync_id();
 
                 for (Pin pin : list) {
                     pin_ids.add(pin.id);
@@ -110,7 +114,6 @@ public class SyncService extends Service {
                 pinDao.insertAll(list);
 
                 pinDao.set_sync_id(pin_ids, sync_id);
-                pinDao.sync_removed_items(board.id, sync_id);
 
                 if (!iterator.hasNext()) {
                     Intent broadcast = new Intent(SYNCED);
